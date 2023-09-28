@@ -1,0 +1,82 @@
+{
+    "name": "foskym/flarum-oauth-center",
+    "description": "Allow user to authorize the third clients",
+    "keywords": [
+        "flarum",
+        "user",
+        "oauth",
+        "center"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "flarum/core": "^1.2.0"
+    },
+    "authors": [
+        {
+            "name": "FoskyM",
+            "email": "i@fosky.top",
+            "role": "Developer",
+            "homepage": "https://fosky.top"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "FoskyM\\OAuthCenter\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "OAuth Center",
+            "category": "",
+            "icon": {
+                "name": "fas fa-user-friends",
+                "color": "#fff",
+                "backgroundColor": "#c12c1f"
+            }
+        },
+        "flarum-cli": {
+            "modules": {
+                "admin": true,
+                "forum": true,
+                "js": true,
+                "jsCommon": true,
+                "css": true,
+                "locale": true,
+                "gitConf": true,
+                "githubActions": true,
+                "prettier": true,
+                "typescript": true,
+                "bundlewatch": false,
+                "backendTesting": true,
+                "editorConfig": true,
+                "styleci": true
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload-dev": {
+        "psr-4": {
+            "FoskyM\\OAuthCenter\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:unit": "phpunit -c tests/phpunit.unit.xml",
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:unit": "Runs all unit tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once."
+    },
+    "require-dev": {
+        "flarum/testing": "^1.0.0"
+    }
+}
