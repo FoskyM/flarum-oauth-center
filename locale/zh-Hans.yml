@@ -1,0 +1,7 @@
+foskym-oauth-center:
+  admin:
+
+  forum:
+    page:
+      label:
+        authorize: 授权
