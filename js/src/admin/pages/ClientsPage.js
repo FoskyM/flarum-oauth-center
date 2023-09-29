@@ -7,7 +7,7 @@ export default class ClientsPage extends Page {
   oninit(vnode) {
     super.oninit(vnode);
 
-    app.store.find('clients').then(() => {
+    app.store.find('oauth/clients').then(() => {
       m.redraw();
     });
   }
