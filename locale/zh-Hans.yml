@@ -1,5 +1,9 @@
 foskym-oauth-center:
   admin:
+    page:
+      index: 首页
+      clients: 应用管理
+      scopes: 权限管理
 
   forum:
     page:
