@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of foskym/flarum-oauth-center.
+ *
+ * Copyright (c) 2023 FoskyM.
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
 namespace FoskyM\OAuthCenter;
 
 use OAuth2\Server;
@@ -25,6 +33,7 @@ class OAuth
         $storage = new Storage;
         $server = new Server($storage, array(
             'allow_implicit' => true,
+            'enforce_state' => false
         ));
         $server->addGrantType(new AuthorizationCode($storage));
         $server->addGrantType(new ClientCredentials($storage));

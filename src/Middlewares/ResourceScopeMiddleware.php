@@ -6,6 +6,7 @@ use Flarum\Foundation\ErrorHandling\ExceptionHandler\IlluminateValidationExcepti
 use Flarum\Foundation\ErrorHandling\JsonApiFormatter;
 use FoskyM\OAuthCenter\OAuth;
 use FoskyM\OAuthCenter\Storage;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
