@@ -4,6 +4,11 @@ foskym-oauth-center:
       index: 首页
       clients: 应用管理
       scopes: 权限管理
+    settings:
+      access_lifetime: 访问令牌有效期（秒）
+      allow_implicit: 允许隐式授权（response_type=token）
+      enforce_state: 强制状态验证（state 参数）
+      require_exact_redirect_uri: 需要精确的重定向 URI
 
   forum:
     page:
