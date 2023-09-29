@@ -14,7 +14,7 @@ use OAuth2\Storage\RefreshTokenInterface;
 use OAuth2\Storage\ScopeInterface;
 use OAuth2\Storage\UserCredentialsInterface;
 
-abstract class Storage implements
+class Storage implements
     AuthorizationCodeInterface,
     AccessTokenInterface,
     ClientCredentialsInterface,
