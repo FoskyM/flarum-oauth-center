@@ -3,5 +3,7 @@ foskym-oauth-center:
 
   forum:
     page:
-      label:
+      title:
         authorize: 授权
+      label:
+        authorized: 授权记录
