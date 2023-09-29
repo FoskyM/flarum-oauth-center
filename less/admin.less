@@ -1,0 +1,35 @@
+.OAuthCenter {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+
+  .hidden {
+    display: none;
+  }
+
+  .pull-right {
+    float: right;
+  }
+
+  .oauth-menu {
+    background: @control-bg;
+    margin-bottom: 15px;
+
+
+    .Button {
+      padding: 12px 13px;
+      border-radius: 0;
+
+      &.item-selected {
+        background: darken(@control-bg, 10%);
+      }
+    }
+  }
+}
+@media (min-width: 992px) {
+  .OAuthCenter {
+    .OAuthCenterPage-container {
+      max-width: 600px;
+      margin: 0;
+    }
+  }
+}
