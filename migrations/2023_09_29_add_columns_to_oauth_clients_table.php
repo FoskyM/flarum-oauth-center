@@ -12,8 +12,8 @@
 use Flarum\Database\Migration;
 
 return Migration::addColumns('oauth_clients', [
-    'client_name' => ['string', 'default' => null, 'nullable' => true],
-    'client_icon' => ['string', 'default' => null, 'nullable' => true],
-    'client_desc' => ['string', 'default' => null, 'nullable' => true],
-    'client_home' => ['string', 'default' => null, 'nullable' => true],
+    'client_name' => ['string', 'length' => 500, 'default' => null, 'nullable' => true],
+    'client_icon' => ['string', 'length' => 500, 'default' => null, 'nullable' => true],
+    'client_desc' => ['string', 'length' => 1000, 'default' => null, 'nullable' => true],
+    'client_home' => ['string', 'length' => 200, 'default' => null, 'nullable' => true],
 ]);

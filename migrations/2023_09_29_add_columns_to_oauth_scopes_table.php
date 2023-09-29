@@ -12,7 +12,7 @@
 use Flarum\Database\Migration;
 
 return Migration::addColumns('oauth_scopes', [
-    'scope_name' => ['string', 'default' => null, 'nullable' => true],
-    'scope_icon' => ['string', 'default' => null, 'nullable' => true],
-    'scope_desc' => ['string', 'default' => null, 'nullable' => true],
+    'scope_name' => ['string', 'length' => 500, 'default' => null, 'nullable' => true],
+    'scope_icon' => ['string', 'length' => 500, 'default' => null, 'nullable' => true],
+    'scope_desc' => ['string', 'length' => 1000, 'default' => null, 'nullable' => true],
 ]);
