@@ -28,7 +28,7 @@ return [
     (new Extend\Routes('forum'))
         ->post('/oauth/authorize', 'oauth.authorize.post', Controllers\AuthorizeController::class),
     (new Extend\Routes('api'))
-        ->get('/oauth/clients', 'oauth.clients.list', Api\Controller\ListClientController::class),
+        ->get('/oauth-clients', 'oauth.clients.list', Api\Controller\ListClientController::class),
 
     (new Extend\Middleware('api'))->add(ResourceScopeMiddleware::class),
 ];

@@ -15,10 +15,11 @@ foskym-oauth-center:
       redirect_uri: 回调地址（多地址请用空格分割）
       grant_types: 授权类型（可空）
       scope: 权限（可空）
-      name: 应用名称（可空）
-      description: 应用描述（可空）
-      icon: 应用图标地址（可空 可使用fontawesome图标）
-      home: 主页地址（可空）
+      client_name: 应用名称（可空）
+      client_desc: 应用描述（可空）
+      client_icon: 应用图标地址（可空 可使用fontawesome图标）
+      client_home: 主页地址（可空）
+      add_button: 添加应用
 
   forum:
     page:
