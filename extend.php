@@ -31,6 +31,7 @@ return [
     (new Extend\Routes('api'))
         ->get('/oauth-clients', 'oauth.clients.list', Api\Controller\ListClientController::class)
         ->post('/oauth-clients', 'oauth.clients.create', Api\Controller\CreateClientController::class)
+        ->get('/oauth-clients/{client_id}', 'oauth.clients.show', Api\Controller\ShowClientController::class)
         ->patch('/oauth-clients/{id}', 'oauth.clients.update', Api\Controller\UpdateClientController::class)
         ->delete('/oauth-clients/{id}', 'oauth.clients.delete', Api\Controller\DeleteClientController::class),
 

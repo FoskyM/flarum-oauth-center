@@ -16,10 +16,13 @@ class ShowClientController extends AbstractListController
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $client_id = Arr::get($request->getQueryParams(), 'client_id');
-        RequestUtil::getActor($request)->assertUser();
+        RequestUtil::getActor($request)->assertRegistered();
 
         $client = Client::whereOrFail('client_id', $client_id);
-        $client->client_secret = '<PROTECT>';
+
+        if (isset($client->client_secret)) {
+            $client->client_secret = '<PROTECT>';
+        }
 
         return $client;
 
