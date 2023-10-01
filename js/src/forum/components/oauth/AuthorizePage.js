@@ -14,6 +14,7 @@ export default class AuthorizePage extends IndexPage {
   client_scope = [];
   loading = true;
   is_authorized = false;
+  submit_loading = false;
 
   oninit(vnode) {
     super.oninit(vnode);
@@ -76,7 +77,7 @@ export default class AuthorizePage extends IndexPage {
             scopes_temp = scopes_temp.concat(default_scopes);
 
             this.client_scope = scopes_temp.filter((scope, index) => scopes_temp.indexOf(scope) === index);
-            console.log( this.client_scope );
+            console.log(this.client_scope);
             this.loading = false;
             m.redraw();
           });
@@ -135,9 +136,9 @@ export default class AuthorizePage extends IndexPage {
                           <div class="oauth-scope-left">
                             {
                               (scope_info.scope_icon().indexOf('fa-') > -1) ?
-                              <i class={"oauth-scope-object fa-2x " + scope_info.scope_icon()}
-                                 style="margin-left:2px;color:#000"></i> :
-                              <img class="oauth-scope-object" src={scope_info.scope_icon()} style="width:32px"/>
+                                <i class={"oauth-scope-object fa-2x " + scope_info.scope_icon()}
+                                   style="margin-left:2px;color:#000"></i> :
+                                <img class="oauth-scope-object" src={scope_info.scope_icon()} style="width:32px"/>
                             }
                           </div>
                           <div class="oauth-scope-body">
@@ -158,7 +159,7 @@ export default class AuthorizePage extends IndexPage {
                   }
                 </div>
                 <form class="oauth-form" method="post" id="form" onsubmit={this.onsubmit.bind(this)}>
-{/*                  <input type="hidden" name="response_type" value={this.params.response_type}/>
+                  {/*                  <input type="hidden" name="response_type" value={this.params.response_type}/>
                   <input type="hidden" name="client_id" value={this.params.client_id}/>
                   <input type="hidden" name="redirect_uri"
                          value={this.params.redirect_uri}/>
@@ -166,14 +167,12 @@ export default class AuthorizePage extends IndexPage {
                   <input type="hidden" name="scope" value={this.params.scope}/>*/}
                   <input type="hidden" name="is_authorized" value={this.is_authorized}/>
                   <div style="display: flex; margin-top: 15px" class="oauth-form-item">
-                    <Button className="Button" type="submit" style="width: 50%;" onclick={
-                      this.is_authorized = false
-                    }>
+                    <Button className="Button" type="submit" style="width: 50%;" onclick={this.deny.bind(this)}
+                            loading={this.submit_loading}>
                       {app.translator.trans('foskym-oauth-center.forum.authorize.deny')}
                     </Button>
-                    <Button className="Button Button--primary" type="submit" style="width: 50%;" onclick={
-                      this.is_authorized = true
-                    }>
+                    <Button className="Button Button--primary" type="submit" style="width: 50%;"
+                            onclick={this.agree.bind(this)} loading={this.submit_loading}>
                       {app.translator.trans('foskym-oauth-center.forum.authorize.agree')}
                     </Button>
                   </div>
@@ -186,6 +185,12 @@ export default class AuthorizePage extends IndexPage {
         </div>
       </div>
     );
+  }
+  deny(e) {
+    this.is_authorized = false;
+  }
+  agree(e) {
+    this.is_authorized = true;
   }
 
   onsubmit(e) {
