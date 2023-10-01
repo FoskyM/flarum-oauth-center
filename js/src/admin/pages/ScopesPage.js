@@ -50,11 +50,13 @@ export default class ScopesPage extends Page {
                         'PATCH': 'PATCH',
                       },
                       value: scope[key]() || 'GET',
+                      disabled: scope.resource_path() === '/api/user' && key === 'method',
                       onchange: (value) => {
                         this.saveScopeInfo(index, key, value);
                       },
                     }) : key === 'is_default' ? Checkbox.component({
                       state: scope[key]() === 1 || false,
+                      disabled: scope.resource_path() === '/api/user' && key === 'is_default',
                       onchange: (checked) => {
                         this.scopes[index].is_default((this.scopes[index].is_default() + 1) % 2)
                         this.saveScopeInfo(index, key, checked ? 1 : 0);
@@ -62,21 +64,20 @@ export default class ScopesPage extends Page {
                     }) : m('input.FormControl', {
                       type: 'text',
                       value: scope[key]() || '',
+                      disabled: scope.resource_path() === '/api/user' && key === 'resource_path',
                       onchange: (event) => {
-
                         this.saveScopeInfo(index, key, event.target.value);
                       },
                     }))
                   ),
-                  m('td', Button.component({
+                  (scope.resource_path() !== '/api/user' && m('td', Button.component({
                     className: 'Button Button--icon',
                     icon: 'fas fa-times',
                     onclick: () => {
                       this.scopes[index].delete();
                       this.scopes.splice(index, 1);
-
                     },
-                  })),
+                  }))),
                 ])),
                 m('tr', m('td', {
                   colspan: 7,
