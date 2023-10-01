@@ -46,7 +46,7 @@ export default class ClientsPage extends Page {
                       type: 'text',
                       value: client[key]() || '',
                       onchange: (event) => {
-                        this.saveClientInfo(client.id(), key, event.target.value);
+                        this.saveClientInfo(index, key, event.target.value);
                       },
                     }))
                   ),
@@ -98,7 +98,10 @@ export default class ClientsPage extends Page {
     return pwd;
   }
 
-  saveClientInfo(id, key, value) {
-    console.log(id, key, value);
+  saveClientInfo(index, key, value) {
+    console.log(index, key, value);
+    this.clients[index].save({
+      [key]: value,
+    });
   }
 }

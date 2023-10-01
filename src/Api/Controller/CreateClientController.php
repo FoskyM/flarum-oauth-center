@@ -10,7 +10,7 @@ use Tobscure\JsonApi\Document;
 use FoskyM\OAuthCenter\Models\Client;
 use FoskyM\OAuthCenter\Api\Serializer\ClientSerializer;
 
-class ListClientController extends AbstractListController
+class CreateClientController extends AbstractListController
 {
     public $serializer = ClientSerializer::class;
     protected function data(ServerRequestInterface $request, Document $document)
@@ -18,6 +18,22 @@ class ListClientController extends AbstractListController
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        return Client::get();
+        $data = Arr::get($request->getParsedBody(), 'data', []);
+
+        $client = Client::build(
+            Arr::get($data, 'attributes.name'),
+            $actor->id,
+            Arr::get($data, 'attributes.icon'),
+            Arr::get($data, 'attributes.description'),
+            Arr::get($data, 'attributes.actions'),
+            Arr::get($data, 'attributes.metrics'),
+            Arr::get($data, 'attributes.requirements'),
+
+        );
+
+
+        $client->save();
+
+        return $client;
     }
 }
