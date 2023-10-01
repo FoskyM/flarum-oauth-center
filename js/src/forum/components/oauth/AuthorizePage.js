@@ -69,6 +69,12 @@ export default class AuthorizePage extends IndexPage {
 
             let default_scopes = [];
             this.scopes.map(scope => {
+              let index = scopes_temp.indexOf(scope.scope());
+              if (index > -1) {
+                scopes_temp[index] = scope;
+              } else {
+                scopes_temp.slice(index, 1);
+              }
               if (scope.is_default() === 1) {
                 default_scopes.push(scope);
               }
