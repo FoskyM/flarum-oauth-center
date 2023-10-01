@@ -2,7 +2,7 @@ import app from 'flarum/admin/app';
 import Page from 'flarum/common/components/Page';
 import Button from 'flarum/common/components/Button';
 import Select from 'flarum/common/components/Select';
-import CheckBox from 'flarum/common/components/Checkbox';
+import Checkbox from 'flarum/common/components/Checkbox';
 
 export default class ScopesPage extends Page {
   translationPrefix = 'foskym-oauth-center.admin.scopes.';
@@ -50,18 +50,20 @@ export default class ScopesPage extends Page {
                         'PATCH': 'PATCH',
                       },
                       value: scope[key]() || 'GET',
-                      onchange: (event) => {
-                        this.saveScopeInfo(index, key, event.target.value);
+                      onchange: (value) => {
+                        this.saveScopeInfo(index, key, value);
                       },
-                    }) : key === 'is_default' ? CheckBox.component({
-                      state: scope[key]() || false,
-                      onchange: (event) => {
-                        this.saveScopeInfo(index, key, event.target.checked ? 1 : 0);
+                    }) : key === 'is_default' ? Checkbox.component({
+                      state: scope[key]() === 1 || false,
+                      onchange: (checked) => {
+                        this.scopes[index].is_default((this.scopes[index].is_default() + 1) % 2)
+                        this.saveScopeInfo(index, key, checked ? 1 : 0);
                       },
                     }) : m('input.FormControl', {
                       type: 'text',
                       value: scope[key]() || '',
                       onchange: (event) => {
+
                         this.saveScopeInfo(index, key, event.target.value);
                       },
                     }))
@@ -106,7 +108,6 @@ export default class ScopesPage extends Page {
     return str;
   }
   saveScopeInfo(index, key, value) {
-    console.log(index, key, value);
     this.scopes[index].save({
       [key]: value,
     });
