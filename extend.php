@@ -12,7 +12,9 @@
 namespace FoskyM\OAuthCenter;
 
 use Flarum\Extend;
+use Flarum\Http\Middleware\CheckCsrfToken;
 use FoskyM\OAuthCenter\Middlewares\ResourceScopeMiddleware;
+use FoskyM\OAuthCenter\Middlewares\UnsetCsrfMiddleware;
 
 return [
     (new Extend\Frontend('forum'))
@@ -26,7 +28,8 @@ return [
     new Extend\Locales(__DIR__.'/locale'),
 
     (new Extend\Routes('forum'))
-        ->post('/oauth/authorize', 'oauth.authorize.post', Controllers\AuthorizeController::class),
+        ->post('/oauth/authorize', 'oauth.authorize.post', Controllers\AuthorizeController::class)
+        ->post('/oauth/token', 'oauth.token', Controllers\TokenController::class),
 
     (new Extend\Routes('api'))
         ->get('/oauth-clients', 'oauth.clients.list', Api\Controller\ListClientController::class)
@@ -45,5 +48,7 @@ return [
         ->serializeToForum('foskym-oauth-center.enforce_state', 'foskym-oauth-center.enforce_state', 'boolval')
         ->serializeToForum('foskym-oauth-center.require_exact_redirect_uri', 'foskym-oauth-center.require_exact_redirect_uri', 'boolval'),
 
+    (new Extend\Middleware('forum'))
+        ->insertBefore(CheckCsrfToken::class, UnsetCsrfMiddleware::class),
     (new Extend\Middleware('api'))->add(ResourceScopeMiddleware::class),
 ];

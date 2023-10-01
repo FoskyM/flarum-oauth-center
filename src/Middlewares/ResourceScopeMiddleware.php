@@ -4,10 +4,12 @@ namespace FoskyM\OAuthCenter\Middlewares;
 
 use Flarum\Foundation\ErrorHandling\ExceptionHandler\IlluminateValidationExceptionHandler;
 use Flarum\Foundation\ErrorHandling\JsonApiFormatter;
+use Flarum\Settings\SettingsRepositoryInterface;
 use FoskyM\OAuthCenter\OAuth;
 use FoskyM\OAuthCenter\Storage;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,6 +22,11 @@ use Tobscure\JsonApi\Exception\Handler\ResponseBag;
 use FoskyM\OAuthCenter\Models\Scope;
 class ResourceScopeMiddleware implements MiddlewareInterface
 {
+    protected $settings;
+    public function __construct(SettingsRepositoryInterface $settings)
+    {
+        $this->settings = $settings;
+    }
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         $path = $request->getUri()->getPath();
@@ -27,12 +34,11 @@ class ResourceScopeMiddleware implements MiddlewareInterface
         if ($token !== '' && $scope = Scope::get_path_scope($path)) {
             if (strtolower($request->getMethod()) === strtolower($scope->method)) {
                 try {
-                    $oauth = new OAuth();
+                    $oauth = new OAuth($this->settings);
                     $server = $oauth->server();
                     $request = $oauth->request();
                     if (!$server->verifyResourceRequest($request::createFromGlobals(), null, $scope->scope)) {
-                        $server->getResponse()->send('json');
-                        die;
+                        return new JsonResponse(json_decode($server->getResponse()->getResponseBody(), true));
                     }
                     /*$error = new ResponseBag('422', [
                         [
