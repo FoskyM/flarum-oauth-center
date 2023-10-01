@@ -5,6 +5,7 @@ namespace FoskyM\OAuthCenter\Middlewares;
 use Flarum\Foundation\ErrorHandling\ExceptionHandler\IlluminateValidationExceptionHandler;
 use Flarum\Foundation\ErrorHandling\JsonApiFormatter;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\User\User;
 use FoskyM\OAuthCenter\OAuth;
 use FoskyM\OAuthCenter\Storage;
 use Illuminate\Support\Arr;
@@ -15,11 +16,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Flarum\Http\RequestUtil;
-use Flarum\Api\JsonApiResponse;
-use Tobscure\JsonApi\Document;
-use Tobscure\JsonApi\Exception\Handler\ResponseBag;
-
 use FoskyM\OAuthCenter\Models\Scope;
+
 class ResourceScopeMiddleware implements MiddlewareInterface
 {
     protected $settings;
@@ -29,31 +27,29 @@ class ResourceScopeMiddleware implements MiddlewareInterface
     }
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
-        $path = $request->getUri()->getPath();
+        if (!$request->getAttribute('originalUri')) {
+            return $handler->handle($request);
+        }
+
+        $path = $request->getAttribute('originalUri')->getPath();
         $token = Arr::get($request->getQueryParams(), 'access_token', '');
         if ($token !== '' && $scope = Scope::get_path_scope($path)) {
             if (strtolower($request->getMethod()) === strtolower($scope->method)) {
                 try {
                     $oauth = new OAuth($this->settings);
                     $server = $oauth->server();
-                    $request = $oauth->request();
-                    if (!$server->verifyResourceRequest($request::createFromGlobals(), null, $scope->scope)) {
+                    $oauth_request = $oauth->request()::createFromGlobals();
+
+                    if (!$server->verifyResourceRequest($oauth_request, null, $scope->scope)) {
                         return new JsonResponse(json_decode($server->getResponse()->getResponseBody(), true));
                     }
-                    /*$error = new ResponseBag('422', [
-                        [
-                            'status' => '422',
-                            'code' => 'validation_error',
-                            'source' => [
-                                'pointer' => $path,
-                            ],
-                            'detail' => 'Yikes! The access token don\'t has the scope.',
-                        ],
-                    ]);
-                    $document = new Document();
-                    $document->setErrors($error->getErrors());
 
-                    return new JsonApiResponse($document, $error->getStatus());*/
+                    $token = $server->getAccessTokenData($oauth_request);
+                    $actor = User::find($token['user_id']);
+
+                    $request = RequestUtil::withActor($request, $actor);
+                    $request = $request->withAttribute('bypassCsrfToken', true);
+                    $request = $request->withoutAttribute('session');
                 } catch (ValidationException $exception) {
 
                     $handler = resolve(IlluminateValidationExceptionHandler::class);

@@ -12,6 +12,7 @@
 namespace FoskyM\OAuthCenter;
 
 use Flarum\Extend;
+use Flarum\Http\Middleware\AuthenticateWithHeader;
 use Flarum\Http\Middleware\CheckCsrfToken;
 use FoskyM\OAuthCenter\Middlewares\ResourceScopeMiddleware;
 use FoskyM\OAuthCenter\Middlewares\UnsetCsrfMiddleware;
@@ -41,14 +42,17 @@ return [
         ->get('/oauth-scopes', 'oauth.scopes.list', Api\Controller\ListScopeController::class)
         ->post('/oauth-scopes', 'oauth.scopes.create', Api\Controller\CreateScopeController::class)
         ->patch('/oauth-scopes/{id}', 'oauth.scopes.update', Api\Controller\UpdateScopeController::class)
-        ->delete('/oauth-scopes/{id}', 'oauth.scopes.delete', Api\Controller\DeleteScopeController::class),
+        ->delete('/oauth-scopes/{id}', 'oauth.scopes.delete', Api\Controller\DeleteScopeController::class)
+
+        ->get('/user', 'user.show', Controllers\ApiUserController::class),
 
     (new Extend\Settings)
         ->serializeToForum('foskym-oauth-center.allow_implicit', 'foskym-oauth-center.allow_implicit', 'boolval')
         ->serializeToForum('foskym-oauth-center.enforce_state', 'foskym-oauth-center.enforce_state', 'boolval')
         ->serializeToForum('foskym-oauth-center.require_exact_redirect_uri', 'foskym-oauth-center.require_exact_redirect_uri', 'boolval'),
 
+    (new Extend\Middleware('api'))
+        ->insertAfter(AuthenticateWithHeader::class, ResourceScopeMiddleware::class),
     (new Extend\Middleware('forum'))
         ->insertBefore(CheckCsrfToken::class, UnsetCsrfMiddleware::class),
-    (new Extend\Middleware('api'))->add(ResourceScopeMiddleware::class),
 ];
