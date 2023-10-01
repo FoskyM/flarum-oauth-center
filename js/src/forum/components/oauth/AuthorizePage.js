@@ -43,7 +43,7 @@ export default class AuthorizePage extends IndexPage {
           if (app.forum.attribute('foskym-oauth-center.require_exact_redirect_uri') && uris.indexOf(params.redirect_uri) == -1) {
             m.route.set('/');
           }
-          if (app.forum.attribute('foskym-oauth-center.allow_implicit') && params.response_type == 'token') {
+          if (!app.forum.attribute('foskym-oauth-center.allow_implicit') && params.response_type == 'token') {
             m.route.set('/');
           }
           if (app.forum.attribute('foskym-oauth-center.enforce_state') && params.enforce_state == null) {
@@ -214,12 +214,7 @@ export default class AuthorizePage extends IndexPage {
         is_authorized: this.is_authorized,
       }
     }).then((params) => {
-      let arr = []
-      for (let k in params) {
-        arr.push(`${k}=${params[k]}`)
-      }
-      let url = `${this.params.redirect_uri }?${arr.join('&')}`;
-      window.location.href = url;
+      window.location.href = params.location;
     });
 
     // Some form handling logic here
