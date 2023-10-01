@@ -1,7 +1,42 @@
 foskym-oauth-center:
-  # For more details on the format
-  # Checkout https://docs.flarum.org/extend/i18n/#appendix-a-standard-key-format
   admin:
-    my_cool_key: My Cool Key
+    page:
+      index: home
+      clients: Manage Clients
+      scopes: Manage Scopes
+    settings:
+      access_lifetime: Access Token Lifetime (seconds)
+      allow_implicit: Allow Implicit Grant (response_type=token)
+      enforce_state: Enforce State Validation (state parameter)
+      require_exact_redirect_uri: Require Exact Redirect URI
+    clients:
+      client_id: Client ID
+      client_secret: Client Secret
+      redirect_uri: Redirect URI
+      grant_types: Grant Types
+      scope: Scope
+      client_name: Name
+      client_desc: Description
+      client_icon: Icon
+      client_home: HomePage
+      add_button: Add Client
+    scopes:
+      scope: Scope
+      resource_path: Resource Path
+      method: Method
+      is_default: Default
+      scope_name: Name
+      scope_icon: Icon
+      scope_desc: Description
+      add_button: Add Scope
 
   forum:
+    page:
+      title:
+        authorize: Authorize
+      label:
+        authorized: Authorized Logs
+    authorize:
+      access: Access to
+      agree: Agree
+      deny: Deny
