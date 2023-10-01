@@ -7,6 +7,7 @@ import extractText from 'flarum/common/utils/extractText';
 
 export default class AuthorizePage extends IndexPage {
   params = [];
+  client = null;
   oninit(vnode) {
     super.oninit(vnode);
     if (!app.session.user) {
@@ -19,7 +20,9 @@ export default class AuthorizePage extends IndexPage {
       m.route.set('/');
     } else {
       this.params = params;
-
+      app.store.find('oauth-clients', {'client_id': params.client_id}).then(client => {
+          this.client = client;
+      });
     }
   }
 

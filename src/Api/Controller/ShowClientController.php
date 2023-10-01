@@ -15,10 +15,10 @@ class ShowClientController extends AbstractListController
     public $serializer = ClientSerializer::class;
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        $id = Arr::get($request->getQueryParams(), 'id');
+        $client_id = Arr::get($request->getQueryParams(), 'client_id');
         RequestUtil::getActor($request)->assertUser();
 
-        $client = Client::findOrFail($id);
+        $client = Client::whereOrFail('client_id', $client_id);
         $client->client_secret = '<PROTECT>';
 
         return $client;
