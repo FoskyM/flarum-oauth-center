@@ -86,6 +86,8 @@ export default class ScopesPage extends Page {
                     const scope = app.store.createRecord('oauth-scopes');
                     scope.save({
                       'scope': 'Scope.' + this.randomString(8),
+                      'resource_path': '/api/' + this.randomString(4),
+                      'method': 'GET',
                     }).then(this.scopes.push(scope));
                   },
                 }, app.translator.trans(this.translationPrefix + 'add_button')))),
