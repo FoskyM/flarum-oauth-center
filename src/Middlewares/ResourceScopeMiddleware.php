@@ -9,6 +9,7 @@ use Flarum\User\User;
 use FoskyM\OAuthCenter\OAuth;
 use FoskyM\OAuthCenter\Storage;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -20,6 +21,7 @@ use FoskyM\OAuthCenter\Models\Scope;
 
 class ResourceScopeMiddleware implements MiddlewareInterface
 {
+    const TOKEN_PREFIX = 'Bearer ';
     protected $settings;
     public function __construct(SettingsRepositoryInterface $settings)
     {
@@ -31,8 +33,17 @@ class ResourceScopeMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        $headerLine = $request->getHeaderLine('authorization');
+
+        $parts = explode(';', $headerLine);
+
+        if (isset($parts[0]) && Str::startsWith($parts[0], self::TOKEN_PREFIX)) {
+            $token = substr($parts[0], strlen(self::TOKEN_PREFIX));
+        } else {
+            $token = Arr::get($request->getQueryParams(), 'access_token', '');
+        }
         $path = $request->getAttribute('originalUri')->getPath();
-        $token = Arr::get($request->getQueryParams(), 'access_token', '');
+
         if ($token !== '' && $scope = Scope::get_path_scope($path)) {
             if (strtolower($request->getMethod()) === strtolower($scope->method)) {
                 try {
