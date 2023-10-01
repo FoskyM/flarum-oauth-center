@@ -47,9 +47,9 @@ class AuthorizeController implements RequestHandlerInterface
         $is_authorized = Arr::get($params, 'is_authorized', 0);
         $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
         if ($is_authorized) {
-            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
+//            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
             return new JsonResponse([
-                'code'  =>  $code
+                'location'  =>  $response->getHttpHeader('Location')
             ]);
         }
 
