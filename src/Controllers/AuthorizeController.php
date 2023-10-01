@@ -49,8 +49,10 @@ class AuthorizeController implements RequestHandlerInterface
         $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
         if ($is_authorized) {
             // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
-           /* $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
-            exit("SUCCESS! Authorization Code: $code");*/
+            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
+            return new JsonResponse([
+                'code'  =>  $code
+            ]);
         }
         $response->getResponseBody();
         return new JsonResponse(json_decode($response->getResponseBody(), true));

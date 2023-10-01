@@ -206,7 +206,14 @@ export default class AuthorizePage extends IndexPage {
         scope: this.params.scope,
         is_authorized: this.is_authorized,
       }
-    }).then((r) => console.log(r));
+    }).then((params) => {
+      let arr = []
+      for (let k in params) {
+        arr.push(`${k}=${params[k]}`)
+      }
+      let url = `${this.params.redirect_uri }?${arr.join('&')}`;
+      window.location.href = url;
+    });
 
     // Some form handling logic here
   }
