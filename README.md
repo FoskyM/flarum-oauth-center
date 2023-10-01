@@ -31,6 +31,13 @@ php flarum cache:clear
 ### set scope for your resources (user.read is default scope)
 ![Snipaste_2023-10-02_06-16-06](https://github.com/FoskyM/flarum-oauth-center/assets/39661663/31648ad2-4326-47e0-9d26-c0e3b2f30f8d)
 
+### uri
+authorize: `/oauth/authorize`
+
+token: `/oauth/token`
+
+resource(user): `/api/user`
+
 ### do it as normal OAuth client
 ![Snipaste_2023-10-02_06-16-31](https://github.com/FoskyM/flarum-oauth-center/assets/39661663/1632672e-e631-41bc-b794-40428157b41c)
 
