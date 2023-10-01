@@ -36,9 +36,13 @@ class OAuth
     {
         return new Request;
     }
+
+    public function storage(): Storage
+    {
+        return new Storage;
+    }
     public function server(): Server
     {
-
         $storage = new Storage;
         $server = new Server($storage, array(
             'allow_implicit' => $this->settings->get('foskym-oauth-center.allow_implicit') == "1",

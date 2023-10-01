@@ -15,4 +15,5 @@ use Flarum\Database\AbstractModel;
 class Jwt extends AbstractModel
 {
     protected $table = 'oauth_jwt';
+    protected $guarded = [];
 }

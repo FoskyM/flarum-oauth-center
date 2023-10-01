@@ -12,13 +12,23 @@ foskym-oauth-center:
     clients:
       client_id: 应用 ID
       client_secret: 应用密钥
-      redirect_uri: 回调地址（多地址请用空格分割）
-      grant_types: 授权类型（可空）
-      scope: 权限（可空）
-      name: 应用名称（可空）
-      description: 应用描述（可空）
-      icon: 应用图标地址（可空 可使用fontawesome图标）
-      home: 主页地址（可空）
+      redirect_uri: 回调地址
+      grant_types: 授权类型
+      scope: 权限
+      client_name: 名称
+      client_desc: 描述
+      client_icon: 图标
+      client_home: 主页
+      add_button: 添加应用
+    scopes:
+      scope: 权限标识
+      resource_path: 资源路径
+      method: 请求方法
+      is_default: 默认
+      scope_name: 名称
+      scope_icon: 图标
+      scope_desc: 描述
+      add_button: 添加权限
 
   forum:
     page:
@@ -26,3 +36,7 @@ foskym-oauth-center:
         authorize: 授权
       label:
         authorized: 授权记录
+    authorize:
+      access: 授权访问
+      agree: 授权
+      deny: 拒绝

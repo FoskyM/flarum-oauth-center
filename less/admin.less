@@ -24,6 +24,39 @@
       }
     }
   }
+
+  .OAuthCenterPage-container {
+    max-width: 100% !important;
+  }
+
+  .OAuthCenter-clientsPage, .OAuthCenter-scopesPage {
+    table {
+      width: 100%;
+
+      td, th {
+        padding: 3px 5px;
+      }
+
+      th {
+        text-align: left;
+      }
+    }
+
+    .Checkbox {
+      padding: 0 10px;
+    }
+
+    .FormControl {
+      background: @body-bg;
+      border-color: @control-bg;
+
+      // We set the same as Flarum default, but with more specificity
+      &:focus,
+      &.focus {
+        border-color: @primary-color;
+      }
+    }
+  }
 }
 @media (min-width: 992px) {
   .OAuthCenter {

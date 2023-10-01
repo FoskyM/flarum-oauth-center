@@ -20,7 +20,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Group\Group;
 
-class AuthorizeController implements RequestHandlerInterface
+class TokenController implements RequestHandlerInterface
 {
     protected $settings;
     public function __construct(SettingsRepositoryInterface $settings)
@@ -30,29 +30,11 @@ class AuthorizeController implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $actor = RequestUtil::getActor($request);
-        $actor->assertRegistered();
-
-        $params = $request->getParsedBody();
-
         $oauth = new OAuth($this->settings);
         $server = $oauth->server();
-        $request = $oauth->request()::createFromGlobals();
-        $response = $oauth->response();
 
-        if (!$server->validateAuthorizeRequest($request, $response)) {
-            return new JsonResponse(json_decode($response->getResponseBody(), true));
-        }
-
-        $is_authorized = Arr::get($params, 'is_authorized', 0);
-        $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
-        if ($is_authorized) {
-            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
-            return new JsonResponse([
-                'code'  =>  $code
-            ]);
-        }
-
-        return new JsonResponse(json_decode($response->getResponseBody(), true));
+        $body = $server->handleTokenRequest($oauth->request()::createFromGlobals())
+            ->getResponseBody();
+        return new JsonResponse(json_decode($body, true));
     }
 }

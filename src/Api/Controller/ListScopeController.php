@@ -7,17 +7,17 @@ use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use FoskyM\OAuthCenter\Models\Client;
-use FoskyM\OAuthCenter\Api\Serializer\ClientSerializer;
+use FoskyM\OAuthCenter\Models\Scope;
+use FoskyM\OAuthCenter\Api\Serializer\ScopeSerializer;
 
-class ListClientController extends AbstractListController
+class ListScopeController extends AbstractListController
 {
-    public $serializer = ClientSerializer::class;
+    public $serializer = ScopeSerializer::class;
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        return Client::all();
+        return Scope::all();
     }
 }
