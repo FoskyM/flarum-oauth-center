@@ -38,3 +38,5 @@ foskym-oauth-center:
         authorized: 授权记录
     authorize:
       access: 授权访问
+      agree: 授权
+      deny: 拒绝
