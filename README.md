@@ -52,4 +52,4 @@ resource(user): `/api/user`
 
 - [Packagist](https://packagist.org/packages/foskym/flarum-oauth-center)
 - [GitHub](https://github.com/foskym/flarum-oauth-center)
-- [Discuss](https://discuss.flarum.org/d/PUT_DISCUSS_SLUG_HERE)
+- [Discuss](https://discuss.flarum.org/d/33413-oauth-center)
