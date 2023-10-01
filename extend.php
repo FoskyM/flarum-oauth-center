@@ -33,7 +33,12 @@ return [
         ->post('/oauth-clients', 'oauth.clients.create', Api\Controller\CreateClientController::class)
         ->get('/oauth-clients/{client_id}', 'oauth.clients.show', Api\Controller\ShowClientController::class)
         ->patch('/oauth-clients/{id}', 'oauth.clients.update', Api\Controller\UpdateClientController::class)
-        ->delete('/oauth-clients/{id}', 'oauth.clients.delete', Api\Controller\DeleteClientController::class),
+        ->delete('/oauth-clients/{id}', 'oauth.clients.delete', Api\Controller\DeleteClientController::class)
+
+        ->get('/oauth-scopes', 'oauth.clients.list', Api\Controller\ListClientController::class)
+        ->post('/oauth-scopes', 'oauth.clients.create', Api\Controller\CreateClientController::class)
+        ->patch('/oauth-scopes/{id}', 'oauth.clients.update', Api\Controller\UpdateClientController::class)
+        ->delete('/oauth-scopes/{id}', 'oauth.clients.delete', Api\Controller\DeleteClientController::class),
 
     (new Extend\Settings)
         ->serializeToForum('foskym-oauth-center.allow_implicit', 'foskym-oauth-center.allow_implicit', 'boolval')
