@@ -18,22 +18,12 @@ class CreateClientController extends AbstractListController
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        $data = Arr::get($request->getParsedBody(), 'data', []);
+        $attributes = Arr::get($request->getParsedBody(), 'data.attributes');
 
-        $client = Client::build(
-            Arr::get($data, 'attributes.name'),
-            $actor->id,
-            Arr::get($data, 'attributes.icon'),
-            Arr::get($data, 'attributes.description'),
-            Arr::get($data, 'attributes.actions'),
-            Arr::get($data, 'attributes.metrics'),
-            Arr::get($data, 'attributes.requirements'),
-
-        );
-
-
-        $client->save();
-
-        return $client;
+        return Client::create([
+            'client_id' => Arr::get($attributes, 'client_id'),
+            'client_secret' => Arr::get($attributes, 'client_secret'),
+            'user_id'   => $actor->id,
+        ]);
     }
 }

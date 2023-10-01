@@ -21,11 +21,11 @@ class UpdateClientController extends AbstractListController
         $id = Arr::get($request->getQueryParams(), 'id');
         $client = Client::find($id);
 
-        $data = Arr::get($request->getParsedBody(), 'data', []);
+        $attributes = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
         collect(['client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'client_name', 'client_desc', 'client_icon', 'client_home'])
-            ->each(function (string $attribute) use ($client, $data) {
-                if (($val = Arr::get($data, "attributes.$attribute")) !== null) {
+            ->each(function (string $attribute) use ($client, $attributes) {
+                if (($val = Arr::get($attributes, $attribute)) !== null) {
                     $client->$attribute = $val;
                 }
             });

@@ -18,6 +18,6 @@ class ListClientController extends AbstractListController
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        return Client::get();
+        return Client::all();
     }
 }
