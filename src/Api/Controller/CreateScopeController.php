@@ -20,6 +20,8 @@ class CreateScopeController extends AbstractListController
 
         $attributes = Arr::get($request->getParsedBody(), 'data.attributes');
 
-        return Scope::create([]);
+        return Scope::create([
+            'scope' => Arr::get($attributes, 'scope'),
+        ]);
     }
 }
