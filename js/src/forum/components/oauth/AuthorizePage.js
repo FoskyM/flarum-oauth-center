@@ -195,6 +195,7 @@ export default class AuthorizePage extends IndexPage {
 
   onsubmit(e) {
     e.preventDefault();
+    this.submit_loading = true;
     app.request({
       method: 'POST',
       url: '/oauth/authorize',
