@@ -54,9 +54,9 @@ export default class ClientsPage extends Page {
                     className: 'Button Button--icon',
                     icon: 'fas fa-times',
                     onclick: () => {
+                      this.clients[index].delete();
                       this.clients.splice(index, 1);
 
-                     // this.setting(settingName)(JSON.stringify(reasons));
                     },
                   })),
                 ])),
@@ -72,12 +72,6 @@ export default class ClientsPage extends Page {
                       client_id: client_id,
                       client_secret: client_secret,
                     }).then(this.clients.push(client));
-
-                    // this.clients.push(Client.build({
-                    //
-                    // }));
-
-                    // this.setting(settingName)(JSON.stringify(reasons));
                   },
                 }, app.translator.trans(this.translationPrefix + 'add_button')))),
               ]),
