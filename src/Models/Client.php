@@ -15,7 +15,6 @@ use Flarum\Database\AbstractModel;
 class Client extends AbstractModel
 {
     protected $table = 'oauth_clients';
-
     protected $guarded = [];
 
     public static function build(string $client_id, string $client_secret, int $user_id)
