@@ -20,6 +20,15 @@ foskym-oauth-center:
       client_icon: 图标
       client_home: 主页
       add_button: 添加应用
+    scopes:
+      scope: 权限标识
+      resource_path: 资源路径
+      method: 请求方法
+      is_default: 默认
+      scope_name: 名称
+      scope_icon: 图标
+      scope_desc: 描述
+      add_button: 添加权限
 
   forum:
     page:

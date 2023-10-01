@@ -1,10 +1,7 @@
 import app from 'flarum/admin/app';
 import Page from 'flarum/common/components/Page';
-import AdminPage from 'flarum/admin/components/AdminPage';
 import Button from 'flarum/common/components/Button';
-import Client from "../../common/models/Client";
 export default class ClientsPage extends Page {
-  settingName = 'collapsible-posts.reasons';
   translationPrefix = 'foskym-oauth-center.admin.clients.';
   clients = [];
   oninit(vnode) {
