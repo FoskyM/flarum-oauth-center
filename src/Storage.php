@@ -433,7 +433,7 @@ class Storage implements
         if ($result = Models\Scope::where('is_default', true)->get()) {
             $defaultScope = array_map(function ($row) {
                 return $row['scope'];
-            }, $result);
+            }, $result->toArray());
 
             return implode(' ', $defaultScope);
         }

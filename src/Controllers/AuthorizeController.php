@@ -35,14 +35,14 @@ class AuthorizeController implements RequestHandlerInterface
 
         $params = $request->getParsedBody();
 
-        $oauth = new OAuth();
+        $oauth = new OAuth($this->settings);
         $server = $oauth->server();
         $request = $oauth->request()::createFromGlobals();
         $response = $oauth->response();
 
         if (!$server->validateAuthorizeRequest($request, $response)) {
-            $response->send();
-            die;
+            $response->getResponseBody();
+            return new JsonResponse(json_decode($response->getResponseBody(), true));
         }
 
         $is_authorized = (Arr::get($params, 'authorized', 'no') === 'yes');
@@ -52,6 +52,7 @@ class AuthorizeController implements RequestHandlerInterface
            /* $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
             exit("SUCCESS! Authorization Code: $code");*/
         }
-        $response->send();
+        $response->getResponseBody();
+        return new JsonResponse(json_decode($response->getResponseBody(), true));
     }
 }
