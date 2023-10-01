@@ -1,0 +1,218 @@
+.oauth-area {
+  display: block !important;
+  position: relative;
+  left: 0;
+  top: 0;
+  padding: 110px 0;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.oauth-main {
+  position: relative;
+  width: 376px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.oauth-main::before {
+  backdrop-filter: blur(20px);
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  box-shadow: 0 25px 50px #00000030;
+  background: hsla(0, 0%, 100%, .3);
+}
+
+.oauth-box {
+  padding: 20px;
+  background-color: #f3f3f3;
+}
+
+.oauth-header {
+  backdrop-filter: blur(0);
+  text-align: center;
+  box-shadow: 0 5px 10px -5px #d2d2d2;
+}
+
+.oauth-header h2 {
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 40px;
+  color: #000;
+}
+
+.oauth-header p {
+  font-weight: 400;
+  font-size: 20px;
+  color: #333;
+}
+
+.oauth-body .oauth-form-item {
+  position: relative;
+  margin-bottom: 15px;
+  clear: both;
+  *zoom: 1;
+}
+
+.oauth-body .oauth-form-item:after {
+  content: '\20';
+  clear: both;
+  *zoom: 1;
+  display: block;
+  height: 0;
+}
+
+.oauth-icon {
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: auto;
+  line-height: 35px;
+  text-align: center;
+  color: #999;
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+label:before {
+  color: #999;
+}
+
+@media screen and (max-width: 768px) {
+  .oauth-area {
+    padding-top: 60px
+  }
+
+  .oauth-main {
+    width: 300px
+  }
+
+  .oauth-box {
+    padding: 10px
+  }
+
+  .oauth-main::before {
+    backdrop-filter: none;
+  }
+
+  .oauth-header {
+    background-color: #fff;
+  }
+
+  body {
+    margin: 0
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .oauth-area {
+    padding-top: 0
+  }
+
+  body {
+    background: #f3f3f3 !important;
+  }
+
+  .oauth-main {
+    width: 100%;
+  }
+
+  .oauth-main::before {
+    box-shadow: none !important;
+  }
+
+  .oauth-header {
+    box-shadow: none;
+  }
+
+  .oauth-box:last-child {
+    box-shadow: 0 5px 10px -5px #d2d2d2;
+  }
+}
+
+.oauth-top {
+  text-align: center;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.oauth-top img {
+  width: 64px;
+  border-radius: 50%;
+  border: #4950578c solid 1px;
+  box-shadow: 1px 0 0 0 #e8e8e8, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;
+  transition: all .3s;
+}
+
+.oauth-top img:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+}
+
+.oauth-top i {
+  top: -24px;
+  position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #111;
+}
+
+.oauth-scope-area {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  overflow: auto;
+  max-height: 350px;
+  position: relative;
+}
+
+.oauth-scope {
+  margin-top: 15px;
+}
+
+.oauth-scope:first-child {
+  margin-top: 0;
+}
+
+.oauth-scope, .oauth-scope-body {
+  overflow: hidden;
+  zoom: 1;
+}
+
+.oauth-scope-body, .oauth-scope-left, .oauth-scope-right {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.oauth-scope-left, .oauth-scope > .pull-left {
+  padding-right: 10px;
+  min-width: 42px;
+  text-align: center;
+}
+
+img.oauth-scope-object {
+  display: block;
+  vertical-align: middle;
+  border: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.oauth-scope-body {
+  width: 10000px;
+  padding-left: 8px;
+}
+
+.oauth-scope-heading {
+  margin-top: 0;
+  font-weight: 800;
+  color: #382e2e;
+}
+
+.oauth-scope-body small {
+  font-weight: 500;
+  font-size: 12px;
+  color: #aaa;
+}
