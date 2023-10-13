@@ -16,6 +16,7 @@ use Flarum\Http\Middleware\AuthenticateWithHeader;
 use Flarum\Http\Middleware\CheckCsrfToken;
 use FoskyM\OAuthCenter\Middlewares\ResourceScopeMiddleware;
 use FoskyM\OAuthCenter\Middlewares\UnsetCsrfMiddleware;
+use FoskyM\OAuthCenter\Middlewares\UserCredentialsMiddleware;
 
 return [
     (new Extend\Frontend('forum'))
@@ -54,5 +55,6 @@ return [
     (new Extend\Middleware('api'))
         ->insertAfter(AuthenticateWithHeader::class, ResourceScopeMiddleware::class),
     (new Extend\Middleware('forum'))
-        ->insertBefore(CheckCsrfToken::class, UnsetCsrfMiddleware::class),
+        ->insertBefore(CheckCsrfToken::class, UnsetCsrfMiddleware::class)
+        ->insertAfter(CheckCsrfToken::class, UserCredentialsMiddleware::class),
 ];
