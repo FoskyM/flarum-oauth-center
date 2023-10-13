@@ -11,9 +11,7 @@
     "license": "MIT",
     "require": {
         "flarum/core": "^1.8",
-        "bshaffer/oauth2-server-php": "*",
-        "ext-openssl": "*",
-        "ext-json": "*"
+        "bshaffer/oauth2-server-php": "*"
     },
     "authors": [
         {
