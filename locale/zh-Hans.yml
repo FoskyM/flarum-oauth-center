@@ -1,5 +1,7 @@
 foskym-oauth-center:
   admin:
+    permission:
+      use_oauth: 使用 OAuth 授权
     page:
       index: 首页
       clients: 应用管理

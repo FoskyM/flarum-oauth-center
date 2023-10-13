@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 namespace FoskyM\OAuthCenter\Controllers;
+use Flarum\User\Exception\NotAuthenticatedException;
 use Flarum\User\User;
 use Flarum\Http\RequestUtil;
 use FoskyM\OAuthCenter\OAuth;
@@ -32,6 +33,10 @@ class AuthorizeController implements RequestHandlerInterface
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertRegistered();
+
+        if (!$actor->hasPermission('foskym-oauth-center.use-oauth')) {
+            throw new NotAuthenticatedException();
+        }
 
         $params = $request->getParsedBody();
 

@@ -4,6 +4,7 @@ namespace FoskyM\OAuthCenter\Api\Controller;
 
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
+use Flarum\User\Exception\NotAuthenticatedException;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
@@ -16,7 +17,13 @@ class ShowClientController extends AbstractListController
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $client_id = Arr::get($request->getQueryParams(), 'client_id');
-        RequestUtil::getActor($request)->assertRegistered();
+
+        $actor = RequestUtil::getActor($request);
+        $actor->assertRegistered();
+
+        if (!$actor->hasPermission('foskym-oauth-center.use-oauth')) {
+            throw new NotAuthenticatedException();
+        }
 
         $client = Client::where('client_id', $client_id)->get();
 
