@@ -1,5 +1,7 @@
 foskym-oauth-center:
   admin:
+    permission:
+      use_oauth: Use OAuth
     page:
       index: home
       clients: Manage Clients
