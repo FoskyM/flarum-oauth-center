@@ -10,7 +10,7 @@ app.initializers.add('foskym/flarum-oauth-center', () => {
       label: app.translator.trans('foskym-oauth-center.admin.permission.use_oauth'),
       permission: 'foskym-oauth-center.use-oauth',
     },
-    'use-oauth',
+    'view',
     95
   );
 });
