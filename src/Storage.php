@@ -356,7 +356,10 @@ class Storage implements
      */
     public function getUserDetails($username)
     {
-        return User::where('username', $username)->first();
+        $user = User::where('username', $username)->first();
+        $user->user_id = $user->id;
+
+        return $user;
     }
 
     /**
