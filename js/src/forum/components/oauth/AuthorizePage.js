@@ -8,6 +8,8 @@ import Tooltip from 'flarum/common/components/Tooltip';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 
+import ScopeComponent from '../ScopeComponent';
+
 export default class AuthorizePage extends IndexPage {
   params = [];
   client = null;
@@ -66,7 +68,7 @@ export default class AuthorizePage extends IndexPage {
       let default_scopes = this.scopes.filter(scope => scope.is_default() === 1).map(scope => scope.scope());
 
       this.client_scope = scopes_temp.filter((scope, index) => scopes_temp.indexOf(scope) === index);
-      this.client_scope = this.client_scope.concat(default_scopes);
+      this.client_scope = this.client_scope.concat(default_scopes).filter(scope => scope !== '');
 
       this.loading = false;
       m.redraw();
@@ -98,10 +100,10 @@ export default class AuthorizePage extends IndexPage {
               <div class="oauth-box oauth-body">
 
                 <div class="oauth-top">
-                  <img src={app.forum.attribute('faviconUrl')}/>
+                  <img src={app.forum.attribute('faviconUrl')} alt="favicon"/>
                   <i class="fas fa-exchange-alt fa-2x"></i>
                   <Tooltip text={this.client.client_desc()}>
-                    <img src={this.client.client_icon()}/>
+                    <img src={this.client.client_icon()} alt="client_icon"/>
                   </Tooltip>
                 </div>
                 <div class="oauth-scope-area">
@@ -109,34 +111,11 @@ export default class AuthorizePage extends IndexPage {
                     this.client_scope
                       .filter(scope => scope)
                       .map(scope => {
-                        let scope_info = this.scopes.find(s => s.scope() === scope.scope());
+                        let scope_info = this.scopes.find(s => s.scope() === scope);
                         if (scope_info == null) {
                           return '';
                         }
-                        return (
-                          <div class="oauth-scope">
-                            <div class="oauth-scope-left">
-                              {
-                                (scope_info.scope_icon().indexOf('fa-') > -1) ?
-                                  <i class={"oauth-scope-object fa-2x " + scope_info.scope_icon()}
-                                     style="margin-left:2px;color:#000"></i> :
-                                  <img class="oauth-scope-object" src={scope_info.scope_icon()} style="width:32px"/>
-                              }
-                            </div>
-                            <div class="oauth-scope-body">
-                              <h6 class="oauth-scope-heading">
-                                {scope_info.scope_name()}
-                              </h6>
-                              <small>
-                                {
-                                  scope_info.scope_desc()
-                                    .replace('{client_name}', this.client.client_name())
-                                    .replace('{user}', app.session.user.attribute('displayName'))
-                                }
-                              </small>
-                            </div>
-                          </div>
-                        );
+                        return <ScopeComponent scope={scope_info} client={this.client} />;
                       })
                   }
                 </div>
