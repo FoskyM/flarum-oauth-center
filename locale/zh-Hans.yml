@@ -32,6 +32,7 @@ foskym-oauth-center:
       scope_icon: 图标
       scope_desc: 描述
       add_button: 添加权限
+      edit_scope: 编辑权限
 
   forum:
     page:
