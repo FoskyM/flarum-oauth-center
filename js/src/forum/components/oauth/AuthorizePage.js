@@ -119,13 +119,13 @@ export default class AuthorizePage extends IndexPage {
                       })
                   }
                 </div>
-                <form class="oauth-form" method="post" id="form" onsubmit={this.onsubmit.bind(this)}>
-                  {/*                  <input type="hidden" name="response_type" value={this.params.response_type}/>
+                <form class="oauth-form" method="post" id="form" action="/oauth/authorize" onsubmit={this.onsubmit.bind(this)}>
+                  <input type="hidden" name="response_type" value={this.params.response_type}/>
                   <input type="hidden" name="client_id" value={this.params.client_id}/>
                   <input type="hidden" name="redirect_uri"
                          value={this.params.redirect_uri}/>
                   <input type="hidden" name="state" value={this.params.state}/>
-                  <input type="hidden" name="scope" value={this.params.scope}/>*/}
+                  <input type="hidden" name="scope" value={this.params.scope}/>
                   <input type="hidden" name="is_authorized" value={this.is_authorized}/>
                   <div style="display: flex; margin-top: 15px" class="oauth-form-item">
                     <Button className="Button" type="submit" style="width: 50%;" onclick={this.deny.bind(this)}
@@ -157,21 +157,23 @@ export default class AuthorizePage extends IndexPage {
   onsubmit(e) {
     e.preventDefault();
     this.submit_loading = true;
-    app.request({
-      method: 'POST',
-      url: '/oauth/authorize',
-      body: {
-        response_type: this.params.response_type,
-        client_id: this.params.client_id,
-        redirect_uri: this.params.redirect_uri,
-        state: this.params.state,
-        scope: this.params.scope,
-        is_authorized: this.is_authorized,
-      }
-    }).then((params) => {
-      window.location.href = params.location;
-    });
-
-    // Some form handling logic here
+    if (app.forum.attribute('foskym-oauth-center.authorization_method_fetch')) {
+      app.request({
+        method: 'POST',
+        url: '/oauth/authorize/fetch',
+        body: {
+          response_type: this.params.response_type,
+          client_id: this.params.client_id,
+          redirect_uri: this.params.redirect_uri,
+          state: this.params.state,
+          scope: this.params.scope,
+          is_authorized: this.is_authorized,
+        }
+      }).then((params) => {
+        window.location.href = params.location;
+      });
+    } else {
+      e.target.submit();
+    }
   }
 }

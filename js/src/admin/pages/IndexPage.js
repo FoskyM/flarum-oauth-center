@@ -15,9 +15,11 @@ export default class IndexPage extends Page {
 
     this.fields = [
       'access_lifetime',
+
       'allow_implicit',
       'enforce_state',
-      'require_exact_redirect_uri'
+      'require_exact_redirect_uri',
+      'authorization_method_fetch',
     ];
     const settings = app.data.settings;
     this.values = this.fields.reduce((values, key) => {
@@ -39,7 +41,7 @@ export default class IndexPage extends Page {
             FieldSet.component({}, [
               <div style="height: 5px;"></div>,
               Switch.component({
-                state: this.values[field],
+                state: this.values['foskym-oauth-center.' + field],
                 onchange: (value) => this.saveSingleSetting(field, value),
                 loading: this.saving,
               }, app.translator.trans(`foskym-oauth-center.admin.settings.${field}`))
@@ -47,7 +49,7 @@ export default class IndexPage extends Page {
           )}
           <hr/>
           {FieldSet.component({}, [
-            <input className="FormControl" bidi={this.values[this.fields[0]]}
+            <input className="FormControl" bidi={this.values['foskym-oauth-center.' + this.fields[0]]}
                    placeholder={app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)} required/>,
             <div className="helpText">
               {app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)}
@@ -68,9 +70,9 @@ export default class IndexPage extends Page {
 
     this.saving = true;
 
-    this.values[setting] = value;
+    this.values['foskym-oauth-center.' + setting] = value;
 
-    saveSettings({ [setting]: value })
+    saveSettings({ ['foskym-oauth-center.' + setting]: value })
       .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
       .catch(() => {})
       .finally(() => {

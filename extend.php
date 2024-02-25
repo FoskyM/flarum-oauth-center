@@ -31,6 +31,7 @@ return [
 
     (new Extend\Routes('forum'))
         ->post('/oauth/authorize', 'oauth.authorize.post', Controllers\AuthorizeController::class)
+		->post('/oauth/authorize/fetch', 'oauth.authorize.fetch', Controllers\AuthorizeFetchController::class)
         ->post('/oauth/token', 'oauth.token', Controllers\TokenController::class),
 
     (new Extend\Routes('api'))
@@ -50,7 +51,8 @@ return [
     (new Extend\Settings)
         ->serializeToForum('foskym-oauth-center.allow_implicit', 'foskym-oauth-center.allow_implicit', 'boolval')
         ->serializeToForum('foskym-oauth-center.enforce_state', 'foskym-oauth-center.enforce_state', 'boolval')
-        ->serializeToForum('foskym-oauth-center.require_exact_redirect_uri', 'foskym-oauth-center.require_exact_redirect_uri', 'boolval'),
+        ->serializeToForum('foskym-oauth-center.require_exact_redirect_uri', 'foskym-oauth-center.require_exact_redirect_uri', 'boolval')
+		->serializeToForum('foskym-oauth-center.authorization_method_fetch', 'foskym-oauth-center.authorization_method_fetch', 'boolval'),
 
     (new Extend\Middleware('api'))
         ->insertAfter(AuthenticateWithHeader::class, ResourceScopeMiddleware::class),

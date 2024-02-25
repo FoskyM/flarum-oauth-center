@@ -13,7 +13,6 @@ use Flarum\User\User;
 use Flarum\Http\RequestUtil;
 use FoskyM\OAuthCenter\OAuth;
 use Illuminate\Support\Arr;
-use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -21,7 +20,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Group\Group;
 
-class AuthorizeController implements RequestHandlerInterface
+class AuthorizeFetchController implements RequestHandlerInterface
 {
     protected $settings;
     public function __construct(SettingsRepositoryInterface $settings)
@@ -35,7 +34,7 @@ class AuthorizeController implements RequestHandlerInterface
         $actor->assertRegistered();
 
         if (!$actor->hasPermission('foskym-oauth-center.use-oauth')) {
-            return new HtmlResponse('Don\'t have the permissions of oauth');
+            return new JsonResponse([ 'error' => 'no_permission', 'error_description' => 'Don\'t have the permissions of oauth' ]);
         }
 
         $params = $request->getParsedBody();
@@ -46,13 +45,18 @@ class AuthorizeController implements RequestHandlerInterface
         $response = $oauth->response();
 
         if (!$server->validateAuthorizeRequest($request, $response)) {
-			$response->send();
-			die;
+            return new JsonResponse(json_decode($response->getResponseBody(), true));
         }
 
-        $is_authorized = (bool) Arr::get($params, 'is_authorized', 0);
+        $is_authorized = Arr::get($params, 'is_authorized', 0);
         $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
-		$response->send();
-		die;
+        if ($is_authorized) {
+//            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
+            return new JsonResponse([
+                'location'  =>  $response->getHttpHeader('Location')
+            ]);
+        }
+
+        return new JsonResponse(json_decode($response->getResponseBody(), true));
     }
 }
