@@ -11,6 +11,7 @@ foskym-oauth-center:
       allow_implicit: Allow Implicit Grant (response_type=token)
       enforce_state: Enforce State Validation (state parameter)
       require_exact_redirect_uri: Require Exact Redirect URI
+      authorization_method_fetch: Authorization Method Fetch (Not directly redirecting to)
     clients:
       client_id: Client ID
       client_secret: Client Secret

@@ -11,6 +11,7 @@ foskym-oauth-center:
       allow_implicit: 允许隐式授权（response_type=token）
       enforce_state: 强制状态验证（state 参数）
       require_exact_redirect_uri: 需要精确的重定向 URI
+      authorization_method_fetch: 授权使用 Fetch 方式请求（非直接转向页面）
     clients:
       client_id: 应用 ID
       client_secret: 应用密钥
