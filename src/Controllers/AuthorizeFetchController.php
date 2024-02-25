@@ -14,7 +14,6 @@ use Flarum\Http\RequestUtil;
 use FoskyM\OAuthCenter\Models\Record;
 use FoskyM\OAuthCenter\OAuth;
 use Illuminate\Support\Arr;
-use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -22,7 +21,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\Group\Group;
 
-class AuthorizeController implements RequestHandlerInterface
+class AuthorizeFetchController implements RequestHandlerInterface
 {
     protected $settings;
     public function __construct(SettingsRepositoryInterface $settings)
@@ -36,7 +35,7 @@ class AuthorizeController implements RequestHandlerInterface
         $actor->assertRegistered();
 
         if (!$actor->hasPermission('foskym-oauth-center.use-oauth')) {
-            return new HtmlResponse('Don\'t have the permissions of oauth');
+            return new JsonResponse([ 'error' => 'no_permission', 'error_description' => 'Don\'t have the permissions of oauth' ]);
         }
 
         $params = $request->getParsedBody();
@@ -47,20 +46,23 @@ class AuthorizeController implements RequestHandlerInterface
         $response = $oauth->response();
 
         if (!$server->validateAuthorizeRequest($request, $response)) {
-			$response->send();
-			die;
+            return new JsonResponse(json_decode($response->getResponseBody(), true));
         }
 
-        $is_authorized = (bool) Arr::get($params, 'is_authorized', 0);
-		if ($is_authorized) {
+        $is_authorized = Arr::get($params, 'is_authorized', 0);
+        $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
+        if ($is_authorized) {
 			Record::create([
 				'client_id' => Arr::get($params, 'client_id'),
 				'user_id' => $actor->id,
 				'authorized_at' => date('Y-m-d H:i:s')
 			]);
-		}
-        $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
-		$response->send();
-		die;
+//            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
+            return new JsonResponse([
+                'location'  =>  $response->getHttpHeader('Location')
+            ]);
+        }
+
+        return new JsonResponse(json_decode($response->getResponseBody(), true));
     }
 }

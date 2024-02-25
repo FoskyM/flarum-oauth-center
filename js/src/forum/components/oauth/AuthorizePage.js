@@ -6,6 +6,10 @@ import LogInModal from 'flarum/forum/components/LogInModal';
 import extractText from 'flarum/common/utils/extractText';
 import Tooltip from 'flarum/common/components/Tooltip';
 import Button from 'flarum/common/components/Button';
+import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import avatar from 'flarum/common/helpers/avatar';
+
+import ScopeComponent from '../ScopeComponent';
 
 export default class AuthorizePage extends IndexPage {
   params = [];
@@ -15,6 +19,7 @@ export default class AuthorizePage extends IndexPage {
   loading = true;
   is_authorized = false;
   submit_loading = false;
+  display_mode = 'box';
 
   oninit(vnode) {
     super.oninit(vnode);
@@ -22,76 +27,56 @@ export default class AuthorizePage extends IndexPage {
       setTimeout(() => app.modal.show(LogInModal), 500);
     }
 
+    this.display_mode = app.forum.attribute('foskym-oauth-center.display_mode') || 'box';
+
     const params = m.route.param();
 
     if (params.client_id == null || params.response_type == null || params.redirect_uri == null) {
       m.route.set('/');
-    } else {
-      this.params = params;
-      app.store.find('oauth-clients', params.client_id).then(client => {
-        if (client.length === 0) {
-          m.route.set('/');
-        } else {
-          this.client = client[0];
-          let uris = null;
-          if (this.client.redirect_uri().indexOf(' ') > -1) {
-            uris = this.client.redirect_uri().split(' ');
-          } else {
-            uris = [this.client.redirect_uri()];
-          }
-
-          if (app.forum.attribute('foskym-oauth-center.require_exact_redirect_uri') && uris.indexOf(params.redirect_uri) == -1) {
-            m.route.set('/');
-          }
-          if (!app.forum.attribute('foskym-oauth-center.allow_implicit') && params.response_type == 'token') {
-            m.route.set('/');
-          }
-          if (app.forum.attribute('foskym-oauth-center.enforce_state') && params.enforce_state == null) {
-            m.route.set('/');
-          }
-
-          app.store.find('oauth-scopes').then((scopes) => {
-            this.scopes = scopes
-            let scope = params.scope;
-
-            if (params.scope == null) {
-              scope = this.client.scope();
-            }
-
-            let scopes_temp = [];
-            if (scope == null) {
-              scopes_temp = [];
-            } else if (scope.indexOf(' ') > -1) {
-              scopes_temp = scope.split(' ');
-            } else {
-              scopes_temp = [scope];
-            }
-
-            let default_scopes = [];
-            this.scopes.map(scope => {
-              let index = scopes_temp.indexOf(scope.scope());
-              if (index > -1) {
-                scopes_temp[index] = scope;
-              } else {
-                scopes_temp.slice(index, 1);
-              }
-              if (scope.is_default() === 1) {
-                default_scopes.push(scope);
-              }
-            });
-
-            scopes_temp = scopes_temp.concat(default_scopes);
-
-            this.client_scope = scopes_temp.filter((scope, index) => scopes_temp.indexOf(scope) === index);
-            console.log(this.client_scope);
-            this.loading = false;
-            m.redraw();
-          });
-
-
-        }
-      });
+      return;
     }
+
+    this.params = params;
+
+    Promise.all([
+      app.store.find('oauth-clients', params.client_id),
+      app.store.find('oauth-scopes')
+    ]).then(([client, scopes]) => {
+      if (client.length === 0) {
+        m.route.set('/');
+        return;
+      }
+
+      this.client = client[0];
+      this.scopes = scopes;
+
+      let uris = this.client.redirect_uri().split(' ');
+
+      if (app.forum.attribute('foskym-oauth-center.require_exact_redirect_uri') && !uris.includes(params.redirect_uri)) {
+        m.route.set('/');
+        return;
+      }
+
+      if (!app.forum.attribute('foskym-oauth-center.allow_implicit') && params.response_type === 'token') {
+        m.route.set('/');
+        return;
+      }
+
+      if (app.forum.attribute('foskym-oauth-center.enforce_state') && params.state == null) {
+        m.route.set('/');
+        return;
+      }
+
+      let scopes_temp = params.scope ? params.scope.split(' ') : (this.client.scope() || '').split(' ');
+
+      let default_scopes = this.scopes.filter(scope => scope.is_default() === 1).map(scope => scope.scope());
+
+      this.client_scope = scopes_temp.filter((scope, index) => scopes_temp.indexOf(scope) === index);
+      this.client_scope = this.client_scope.concat(default_scopes).filter(scope => scope !== '');
+
+      this.loading = false;
+      m.redraw();
+    });
   }
 
   setTitle() {
@@ -100,15 +85,15 @@ export default class AuthorizePage extends IndexPage {
   }
 
   view() {
-    if (!this.client) {
-      return '';
+    if (!this.client || this.loading) {
+      return <LoadingIndicator/>;
     }
     return (
-      !this.loading && <div className="AuthorizePage">
+      <div className="AuthorizePage">
         <div className="container">
           <div class="oauth-area">
-            <div class="oauth-main">
-              <div class="oauth-box oauth-header">
+            <div class={'oauth-main oauth-' + this.display_mode}>
+              <div class="oauth-header">
                 <h2>{app.forum.attribute('title')}</h2>
                 <p>
                   {app.translator.trans('foskym-oauth-center.forum.authorize.access')} <a
@@ -116,63 +101,46 @@ export default class AuthorizePage extends IndexPage {
                 </p>
 
               </div>
-              <div class="oauth-box oauth-body">
+              <div class="oauth-body">
 
-                <div class="oauth-top">
-                  <img src={app.forum.attribute('faviconUrl')}/>
+                {/*<div class="oauth-user">*/}
+                {/*  {avatar(app.session.user, {className: 'oauth-avatar'})}*/}
+                {/*  <div class="oauth-username">*/}
+                {/*    <b>{app.session.user.username()}</b>*/}
+                {/*    <span>{app.session.user.displayName()}</span>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+
+                <div class="oauth-info">
+                  <img src={app.forum.attribute('faviconUrl')} alt="favicon"/>
                   <i class="fas fa-exchange-alt fa-2x"></i>
                   <Tooltip text={this.client.client_desc()}>
-                    <img src={this.client.client_icon()}/>
+                    <img src={this.client.client_icon()} alt="client_icon"/>
                   </Tooltip>
+                  <span>{this.client.client_name()}</span>
                 </div>
                 <div class="oauth-scope-area">
+                  <h3>{app.translator.trans('foskym-oauth-center.forum.authorize.require_these_scopes')}</h3>
                   {
-                    this.client_scope.length > 0 && this.client_scope.map(scope => {
-                      let scope_info = null;
-                      this.scopes.map(s => {
-                        if (s.scope() === scope.scope()) {
-                          scope_info = s;
+                    this.client_scope
+                      .filter(scope => scope)
+                      .map(scope => {
+                        let scope_info = this.scopes.find(s => s.scope() === scope);
+                        if (scope_info == null) {
+                          return '';
                         }
-                      });
-                      if (scope_info == null) {
-                        return '';
-                      }
-                      return (
-                        <div class="oauth-scope">
-                          <div class="oauth-scope-left">
-                            {
-                              (scope_info.scope_icon().indexOf('fa-') > -1) ?
-                                <i class={"oauth-scope-object fa-2x " + scope_info.scope_icon()}
-                                   style="margin-left:2px;color:#000"></i> :
-                                <img class="oauth-scope-object" src={scope_info.scope_icon()} style="width:32px"/>
-                            }
-                          </div>
-                          <div class="oauth-scope-body">
-                            <h6 class="oauth-scope-heading">
-                              {scope_info.scope_name()}
-                            </h6>
-                            <small>
-                              {
-                                scope_info.scope_desc()
-                                  .replace('{client_name}', this.client.client_name())
-                                  .replace('{user}', app.session.user.attribute('displayName'))
-                              }
-                            </small>
-                          </div>
-                        </div>
-                      );
-                    })
+                        return <ScopeComponent scope={scope_info} client={this.client} />;
+                      })
                   }
                 </div>
-                <form class="oauth-form" method="post" id="form" onsubmit={this.onsubmit.bind(this)}>
-                  {/*                  <input type="hidden" name="response_type" value={this.params.response_type}/>
+                <form class="oauth-form" method="post" id="form" action="/oauth/authorize" onsubmit={this.onsubmit.bind(this)}>
+                  <input type="hidden" name="response_type" value={this.params.response_type}/>
                   <input type="hidden" name="client_id" value={this.params.client_id}/>
-                  <input type="hidden" name="redirect_uri"
-                         value={this.params.redirect_uri}/>
+                  <input type="hidden" name="redirect_uri" value={this.params.redirect_uri}/>
                   <input type="hidden" name="state" value={this.params.state}/>
-                  <input type="hidden" name="scope" value={this.params.scope}/>*/}
+                  <input type="hidden" name="scope" value={this.params.scope}/>
                   <input type="hidden" name="is_authorized" value={this.is_authorized}/>
-                  <div style="display: flex; margin-top: 15px" class="oauth-form-item">
+                  <div class="oauth-form-item oauth-btn-group">
                     <Button className="Button" type="submit" style="width: 50%;" onclick={this.deny.bind(this)}
                             loading={this.submit_loading}>
                       {app.translator.trans('foskym-oauth-center.forum.authorize.deny')}
@@ -183,8 +151,6 @@ export default class AuthorizePage extends IndexPage {
                     </Button>
                   </div>
                 </form>
-
-
               </div>
             </div>
           </div>
@@ -202,21 +168,23 @@ export default class AuthorizePage extends IndexPage {
   onsubmit(e) {
     e.preventDefault();
     this.submit_loading = true;
-    app.request({
-      method: 'POST',
-      url: '/oauth/authorize',
-      body: {
-        response_type: this.params.response_type,
-        client_id: this.params.client_id,
-        redirect_uri: this.params.redirect_uri,
-        state: this.params.state,
-        scope: this.params.scope,
-        is_authorized: this.is_authorized,
-      }
-    }).then((params) => {
-      window.location.href = params.location;
-    });
-
-    // Some form handling logic here
+    if (app.forum.attribute('foskym-oauth-center.authorization_method_fetch')) {
+      app.request({
+        method: 'POST',
+        url: '/oauth/authorize/fetch',
+        body: {
+          response_type: this.params.response_type,
+          client_id: this.params.client_id,
+          redirect_uri: this.params.redirect_uri,
+          state: this.params.state,
+          scope: this.params.scope,
+          is_authorized: this.is_authorized,
+        }
+      }).then((params) => {
+        window.location.href = params.location;
+      });
+    } else {
+      e.target.submit();
+    }
   }
 }
