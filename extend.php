@@ -51,6 +51,7 @@ return [
         ->get('/user', 'user.show', Controllers\ApiUserController::class),
 
     (new Extend\Settings)
+		->serializeToForum('foskym-oauth-center.display_mode', 'foskym-oauth-center.display_mode')
         ->serializeToForum('foskym-oauth-center.allow_implicit', 'foskym-oauth-center.allow_implicit', 'boolval')
         ->serializeToForum('foskym-oauth-center.enforce_state', 'foskym-oauth-center.enforce_state', 'boolval')
         ->serializeToForum('foskym-oauth-center.require_exact_redirect_uri', 'foskym-oauth-center.require_exact_redirect_uri', 'boolval')

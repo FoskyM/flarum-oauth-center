@@ -7,6 +7,7 @@ import extractText from 'flarum/common/utils/extractText';
 import Tooltip from 'flarum/common/components/Tooltip';
 import Button from 'flarum/common/components/Button';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import avatar from 'flarum/common/helpers/avatar';
 
 import ScopeComponent from '../ScopeComponent';
 
@@ -18,12 +19,15 @@ export default class AuthorizePage extends IndexPage {
   loading = true;
   is_authorized = false;
   submit_loading = false;
+  display_mode = 'box';
 
   oninit(vnode) {
     super.oninit(vnode);
     if (!app.session.user) {
       setTimeout(() => app.modal.show(LogInModal), 500);
     }
+
+    this.display_mode = app.forum.attribute('foskym-oauth-center.display_mode') || 'box';
 
     const params = m.route.param();
 
@@ -82,14 +86,14 @@ export default class AuthorizePage extends IndexPage {
 
   view() {
     if (!this.client || this.loading) {
-      return <LoadingIndicator></LoadingIndicator>;
+      return <LoadingIndicator/>;
     }
     return (
       <div className="AuthorizePage">
         <div className="container">
           <div class="oauth-area">
-            <div class="oauth-main">
-              <div class="oauth-box oauth-header">
+            <div class={'oauth-main oauth-' + this.display_mode}>
+              <div class="oauth-header">
                 <h2>{app.forum.attribute('title')}</h2>
                 <p>
                   {app.translator.trans('foskym-oauth-center.forum.authorize.access')} <a
@@ -97,16 +101,26 @@ export default class AuthorizePage extends IndexPage {
                 </p>
 
               </div>
-              <div class="oauth-box oauth-body">
+              <div class="oauth-body">
 
-                <div class="oauth-top">
+                {/*<div class="oauth-user">*/}
+                {/*  {avatar(app.session.user, {className: 'oauth-avatar'})}*/}
+                {/*  <div class="oauth-username">*/}
+                {/*    <b>{app.session.user.username()}</b>*/}
+                {/*    <span>{app.session.user.displayName()}</span>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+
+                <div class="oauth-info">
                   <img src={app.forum.attribute('faviconUrl')} alt="favicon"/>
                   <i class="fas fa-exchange-alt fa-2x"></i>
                   <Tooltip text={this.client.client_desc()}>
                     <img src={this.client.client_icon()} alt="client_icon"/>
                   </Tooltip>
+                  <span>{this.client.client_name()}</span>
                 </div>
                 <div class="oauth-scope-area">
+                  <h3>{app.translator.trans('foskym-oauth-center.forum.authorize.require_these_scopes')}</h3>
                   {
                     this.client_scope
                       .filter(scope => scope)
@@ -122,12 +136,11 @@ export default class AuthorizePage extends IndexPage {
                 <form class="oauth-form" method="post" id="form" action="/oauth/authorize" onsubmit={this.onsubmit.bind(this)}>
                   <input type="hidden" name="response_type" value={this.params.response_type}/>
                   <input type="hidden" name="client_id" value={this.params.client_id}/>
-                  <input type="hidden" name="redirect_uri"
-                         value={this.params.redirect_uri}/>
+                  <input type="hidden" name="redirect_uri" value={this.params.redirect_uri}/>
                   <input type="hidden" name="state" value={this.params.state}/>
                   <input type="hidden" name="scope" value={this.params.scope}/>
                   <input type="hidden" name="is_authorized" value={this.is_authorized}/>
-                  <div style="display: flex; margin-top: 15px" class="oauth-form-item">
+                  <div class="oauth-form-item oauth-btn-group">
                     <Button className="Button" type="submit" style="width: 50%;" onclick={this.deny.bind(this)}
                             loading={this.submit_loading}>
                       {app.translator.trans('foskym-oauth-center.forum.authorize.deny')}
@@ -138,8 +151,6 @@ export default class AuthorizePage extends IndexPage {
                     </Button>
                   </div>
                 </form>
-
-
               </div>
             </div>
           </div>

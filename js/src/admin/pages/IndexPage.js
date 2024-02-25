@@ -14,6 +14,7 @@ export default class IndexPage extends Page {
     this.saving = false;
 
     this.fields = [
+      'display_mode',
       'access_lifetime',
 
       'allow_implicit',
@@ -28,7 +29,9 @@ export default class IndexPage extends Page {
       return values;
     }, {});
 
-    for (let i = 1; i < this.fields.length; i++) {
+    this.values['foskym-oauth-center.display_mode'] = this.values['foskym-oauth-center.display_mode']() || 'box';
+
+    for (let i = 2; i < this.fields.length; i++) {
       this.values['foskym-oauth-center.' + this.fields[i]] = settings['foskym-oauth-center.' + this.fields[i]] === '1';
     }
   }
@@ -37,7 +40,7 @@ export default class IndexPage extends Page {
     return (
       <div>
         <form onsubmit={this.onsubmit.bind(this)} className="BasicsPage">
-          {this.fields.slice(1).map(field =>
+          {this.fields.slice(2).map(field =>
             FieldSet.component({}, [
               <div style="height: 5px;"></div>,
               Switch.component({
@@ -49,10 +52,26 @@ export default class IndexPage extends Page {
           )}
           <hr/>
           {FieldSet.component({}, [
-            <input className="FormControl" bidi={this.values['foskym-oauth-center.' + this.fields[0]]}
-                   placeholder={app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)} required/>,
+            Select.component({
+              options: {
+                'box': 'Box',
+                'column': 'Column'
+              },
+              value: this.values['foskym-oauth-center.' + this.fields[0]],
+              onchange: (value) => this.saveSingleSetting(this.fields[0], value),
+              loading: this.saving,
+            }),
             <div className="helpText">
               {app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)}
+            </div>,
+          ])}
+          <hr/>
+          {FieldSet.component({}, [
+            <input className="FormControl" bidi={this.values['foskym-oauth-center.' + this.fields[1]]}
+                   placeholder={app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[1]}`)}
+                   required/>,
+            <div className="helpText">
+              {app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[1]}`)}
             </div>,
             Button.component({
               type: 'submit',
@@ -72,9 +91,10 @@ export default class IndexPage extends Page {
 
     this.values['foskym-oauth-center.' + setting] = value;
 
-    saveSettings({ ['foskym-oauth-center.' + setting]: value })
+    saveSettings({['foskym-oauth-center.' + setting]: value})
       .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
-      .catch(() => {})
+      .catch(() => {
+      })
       .finally(() => {
         this.saving = false;
         m.redraw();
@@ -98,7 +118,8 @@ export default class IndexPage extends Page {
 
     saveSettings(settings)
       .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
-      .catch(() => {})
+      .catch(() => {
+      })
       .finally(() => {
         this.saving = false;
         m.redraw();
