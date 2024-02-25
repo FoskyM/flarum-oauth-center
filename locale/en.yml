@@ -32,6 +32,7 @@ foskym-oauth-center:
       scope_icon: Icon
       scope_desc: Description
       add_button: Add Scope
+      edit_scope: Edit Scope
 
   forum:
     page:
