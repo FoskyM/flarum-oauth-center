@@ -45,3 +45,6 @@ foskym-oauth-center:
       access: 授权访问
       agree: 授权
       deny: 拒绝
+    authorized:
+      no_more_records: 没有更多记录了
+      load_more: 加载更多

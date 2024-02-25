@@ -11,6 +11,7 @@
 namespace FoskyM\OAuthCenter\Controllers;
 use Flarum\User\User;
 use Flarum\Http\RequestUtil;
+use FoskyM\OAuthCenter\Models\Record;
 use FoskyM\OAuthCenter\OAuth;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
@@ -51,6 +52,11 @@ class AuthorizeFetchController implements RequestHandlerInterface
         $is_authorized = Arr::get($params, 'is_authorized', 0);
         $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
         if ($is_authorized) {
+			Record::create([
+				'client_id' => Arr::get($params, 'client_id'),
+				'user_id' => $actor->id,
+				'authorized_at' => date('Y-m-d H:i:s')
+			]);
 //            $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
             return new JsonResponse([
                 'location'  =>  $response->getHttpHeader('Location')
