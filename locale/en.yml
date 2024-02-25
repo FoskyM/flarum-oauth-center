@@ -22,6 +22,7 @@ foskym-oauth-center:
       client_icon: Icon
       client_home: HomePage
       add_button: Add Client
+      edit_client: Edit Client
     scopes:
       scope: Scope
       resource_path: Resource Path

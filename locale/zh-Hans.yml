@@ -22,6 +22,7 @@ foskym-oauth-center:
       client_icon: 图标
       client_home: 主页
       add_button: 添加应用
+      edit_client: 编辑应用
     scopes:
       scope: 权限标识
       resource_path: 资源路径

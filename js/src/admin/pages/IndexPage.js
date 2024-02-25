@@ -14,18 +14,20 @@ export default class IndexPage extends Page {
     this.saving = false;
 
     this.fields = [
-      'foskym-oauth-center.access_lifetime',
-      'foskym-oauth-center.allow_implicit',
-      'foskym-oauth-center.enforce_state',
-      'foskym-oauth-center.require_exact_redirect_uri'
+      'access_lifetime',
+      'allow_implicit',
+      'enforce_state',
+      'require_exact_redirect_uri'
     ];
-    this.values = {};
-
     const settings = app.data.settings;
-    this.fields.forEach(key => this.values[key] = Stream(settings[key] || ""));
+    this.values = this.fields.reduce((values, key) => {
+      key = 'foskym-oauth-center.' + key;
+      values[key] = Stream(settings[key] || "");
+      return values;
+    }, {});
 
     for (let i = 1; i < this.fields.length; i++) {
-      this.values[this.fields[i]] = settings[this.fields[i]] === '1';
+      this.values['foskym-oauth-center.' + this.fields[i]] = settings['foskym-oauth-center.' + this.fields[i]] === '1';
     }
   }
 
@@ -33,38 +35,22 @@ export default class IndexPage extends Page {
     return (
       <div>
         <form onsubmit={this.onsubmit.bind(this)} className="BasicsPage">
-          {FieldSet.component({}, [
-            <div style="height: 5px;"></div>,
-            Switch.component({
-              state: this.values['foskym-oauth-center.allow_implicit'],
-              onchange: (value) => this.saveSingleSetting('foskym-oauth-center.allow_implicit', value),
-              loading: this.saving,
-            }, app.translator.trans('foskym-oauth-center.admin.settings.allow_implicit')),
-          ])}
-
-          {FieldSet.component({}, [
-            <div style="height: 5px;"></div>,
-            Switch.component({
-              state: this.values['foskym-oauth-center.enforce_state'],
-              onchange: (value) => this.saveSingleSetting('foskym-oauth-center.enforce_state', value),
-              loading: this.saving,
-            }, app.translator.trans('foskym-oauth-center.admin.settings.enforce_state')),
-          ])}
-
-          {FieldSet.component({}, [
-            <div style="height: 5px;"></div>,
-            Switch.component({
-              state: this.values['foskym-oauth-center.require_exact_redirect_uri'],
-              onchange: (value) => this.saveSingleSetting('foskym-oauth-center.require_exact_redirect_uri', value),
-              loading: this.saving,
-            }, app.translator.trans('foskym-oauth-center.admin.settings.require_exact_redirect_uri')),
-          ])}
+          {this.fields.slice(1).map(field =>
+            FieldSet.component({}, [
+              <div style="height: 5px;"></div>,
+              Switch.component({
+                state: this.values[field],
+                onchange: (value) => this.saveSingleSetting(field, value),
+                loading: this.saving,
+              }, app.translator.trans(`foskym-oauth-center.admin.settings.${field}`))
+            ])
+          )}
           <hr/>
           {FieldSet.component({}, [
-            <input className="FormControl" bidi={this.values['foskym-oauth-center.access_lifetime']}
-                   placeholder={app.translator.trans('foskym-oauth-center.admin.settings.access_lifetime')} required/>,
+            <input className="FormControl" bidi={this.values[this.fields[0]]}
+                   placeholder={app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)} required/>,
             <div className="helpText">
-              {app.translator.trans('foskym-oauth-center.admin.settings.access_lifetime')}
+              {app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)}
             </div>,
             Button.component({
               type: 'submit',
@@ -72,9 +58,7 @@ export default class IndexPage extends Page {
               loading: this.saving
             }, app.translator.trans('core.admin.settings.submit_button'))
           ])}
-
         </form>
-
       </div>
     );
   }
@@ -86,14 +70,10 @@ export default class IndexPage extends Page {
 
     this.values[setting] = value;
 
-    let data = {};
-    data[setting] = value;
-
-    saveSettings(data)
+    saveSettings({ [setting]: value })
       .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
-      .catch(() => {
-      })
-      .then(() => {
+      .catch(() => {})
+      .finally(() => {
         this.saving = false;
         m.redraw();
       });
@@ -105,16 +85,10 @@ export default class IndexPage extends Page {
     if (this.saving) return;
 
     this.saving = true;
-    app.alerts.dismiss(this.successAlert);
 
     const settings = {};
 
     settings['foskym-oauth-center.access_lifetime'] = this.values['foskym-oauth-center.access_lifetime']();
-
-    // this.fields.forEach(key => {
-    //   settings[key] = this.values[key]()
-    //
-    // });
 
     if (settings['foskym-oauth-center.access_lifetime'] === "") {
       settings['foskym-oauth-center.access_lifetime'] = 3600;
@@ -122,9 +96,8 @@ export default class IndexPage extends Page {
 
     saveSettings(settings)
       .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
-      .catch(() => {
-      })
-      .then(() => {
+      .catch(() => {})
+      .finally(() => {
         this.saving = false;
         m.redraw();
       });

@@ -1,27 +1,18 @@
 import app from 'flarum/admin/app';
 import Page from 'flarum/common/components/Page';
 import Button from 'flarum/common/components/Button';
+import EditClientModal from '../components/EditClientModal';
+import {randomString} from "../../common/utils/randomString";
+
 export default class ClientsPage extends Page {
   translationPrefix = 'foskym-oauth-center.admin.clients.';
   clients = [];
+
   oninit(vnode) {
     super.oninit(vnode);
 
-    this.fields = [
-      'client_id',
-      'client_secret',
-      'redirect_uri',
-      'grant_types',
-      'scope',
-      'client_name',
-      'client_desc',
-      'client_icon',
-      'client_home'
-    ];
-
     app.store.find('oauth-clients').then(r => {
       this.clients = r;
-      this.fields.map(key => console.log(this.clients[0][key]))
       m.redraw();
     });
   }
@@ -33,42 +24,45 @@ export default class ClientsPage extends Page {
           m('.Form-group', [
             m('table', [
               m('thead', m('tr', [
-                this.fields.map(key => m('th', app.translator.trans(this.translationPrefix + key))),
+                ['client_id', 'client_name'].map(key => m('th', app.translator.trans(this.translationPrefix + key))),
                 m('th'),
               ])),
               m('tbody', [
                 this.clients.map((client, index) => m('tr', [
-                  this.fields.map(key =>
-                    m('td', m('input.FormControl', {
-                      type: 'text',
-                      value: client[key]() || '',
-                      onchange: (event) => {
-                        this.saveClientInfo(index, key, event.target.value);
-                      },
-                    }))
+                  ['client_id', 'client_name'].map(key =>
+                    m('td', client[key]())
                   ),
-                  m('td', Button.component({
-                    className: 'Button Button--icon',
-                    icon: 'fas fa-times',
-                    onclick: () => {
-                      this.clients[index].delete();
-                      this.clients.splice(index, 1);
-
-                    },
-                  })),
+                  m('td', [
+                    Button.component({
+                      className: 'Button Button--icon',
+                      icon: 'fas fa-edit',
+                      onclick: () => this.showEditModal(client),
+                    }),
+                    Button.component({
+                      className: 'Button Button--icon',
+                      icon: 'fas fa-times',
+                      onclick: () => {
+                        client.delete();
+                        this.clients.splice(index, 1);
+                      },
+                    }),
+                  ]),
                 ])),
                 m('tr', m('td', {
-                  colspan: 9,
+                  colspan: 2,
                 }, Button.component({
                   className: 'Button Button--block',
                   onclick: () => {
                     const client = app.store.createRecord('oauth-clients');
-                    const client_id = this.randomString(32);
-                    const client_secret = this.randomString(32);
+                    const client_id = randomString(32);
+                    const client_secret = randomString(32);
                     client.save({
                       client_id: client_id,
                       client_secret: client_secret,
-                    }).then(this.clients.push(client));
+                    }).then(() => {
+                      this.clients.push(client);
+                      this.showEditModal(client);
+                    });
                   },
                 }, app.translator.trans(this.translationPrefix + 'add_button')))),
               ]),
@@ -79,22 +73,7 @@ export default class ClientsPage extends Page {
     );
   }
 
-  randomString(len) {
-    len = len || 32;
-    let $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let maxPos = $chars.length;
-    let pwd = '';
-    for (let i = 0; i < len; i++) {
-      //0~32的整数
-      pwd += $chars.charAt(Math.floor(Math.random() * (maxPos + 1)));
-    }
-    return pwd;
-  }
-
-  saveClientInfo(index, key, value) {
-    console.log(index, key, value);
-    this.clients[index].save({
-      [key]: value,
-    });
+  showEditModal(client) {
+    app.modal.show(EditClientModal, { client: client });
   }
 }
