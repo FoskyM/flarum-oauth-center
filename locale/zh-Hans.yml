@@ -7,6 +7,7 @@ foskym-oauth-center:
       clients: 应用管理
       scopes: 权限管理
     settings:
+      display_mode: 显示模式
       access_lifetime: 访问令牌有效期（秒）
       allow_implicit: 允许隐式授权（response_type=token）
       enforce_state: 强制状态验证（state 参数）
@@ -42,6 +43,7 @@ foskym-oauth-center:
       label:
         authorized: 授权记录
     authorize:
+      require_these_scopes: 该应用需要以下权限
       access: 授权访问
       agree: 授权
       deny: 拒绝

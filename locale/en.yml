@@ -7,6 +7,7 @@ foskym-oauth-center:
       clients: Manage Clients
       scopes: Manage Scopes
     settings:
+      display_mode: Display Mode
       access_lifetime: Access Token Lifetime (seconds)
       allow_implicit: Allow Implicit Grant (response_type=token)
       enforce_state: Enforce State Validation (state parameter)
@@ -42,6 +43,7 @@ foskym-oauth-center:
       label:
         authorized: Authorized Logs
     authorize:
+      require_these_scopes: Require these scopes
       access: Access to
       agree: Agree
       deny: Deny
