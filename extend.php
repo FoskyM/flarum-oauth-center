@@ -46,6 +46,8 @@ return [
         ->patch('/oauth-scopes/{id}', 'oauth.scopes.update', Api\Controller\UpdateScopeController::class)
         ->delete('/oauth-scopes/{id}', 'oauth.scopes.delete', Api\Controller\DeleteScopeController::class)
 
+		->get('/oauth-records', 'oauth.records.list', Api\Controller\ListRecordController::class)
+
         ->get('/user', 'user.show', Controllers\ApiUserController::class),
 
     (new Extend\Settings)

@@ -27,4 +27,9 @@ class Client extends AbstractModel
 
         return $client;
     }
+
+	public function record()
+	{
+		return $this->hasMany(Record::class, 'client_id', 'client_id');
+	}
 }

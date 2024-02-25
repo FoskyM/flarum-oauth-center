@@ -11,6 +11,7 @@
 namespace FoskyM\OAuthCenter\Controllers;
 use Flarum\User\User;
 use Flarum\Http\RequestUtil;
+use FoskyM\OAuthCenter\Models\Record;
 use FoskyM\OAuthCenter\OAuth;
 use Illuminate\Support\Arr;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -51,6 +52,13 @@ class AuthorizeController implements RequestHandlerInterface
         }
 
         $is_authorized = (bool) Arr::get($params, 'is_authorized', 0);
+		if ($is_authorized) {
+			Record::create([
+				'client_id' => Arr::get($params, 'client_id'),
+				'user_id' => $actor->id,
+				'authorized_at' => date('Y-m-d H:i:s')
+			]);
+		}
         $server->handleAuthorizeRequest($request, $response, $is_authorized, $actor->id);
 		$response->send();
 		die;
