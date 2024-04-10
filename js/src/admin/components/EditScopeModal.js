@@ -27,7 +27,7 @@ export default class EditScopeModal extends Modal {
   }
 
   className() {
-    return 'EditScopeModal Modal--small';
+    return 'EditScopeModal Modal--large';
   }
 
   title() {
@@ -38,27 +38,15 @@ export default class EditScopeModal extends Modal {
     return (
       <div className="Modal-body">
         <form onsubmit={this.onsubmit.bind(this)}>
-          {this.fields.map(key =>
-            <div className="Form-group">
-              <label>{app.translator.trans('foskym-oauth-center.admin.scopes.' + key)}</label>
-              {key === 'method' ? Select.component({
-                options: {
-                  'GET': 'GET',
-                  'POST': 'POST',
-                  'PUT': 'PUT',
-                  'DELETE': 'DELETE',
-                  'PATCH': 'PATCH',
-                },
-                value: this.values[key](),
-                disabled: this.scope.resource_path() === '/api/user' && key === 'method',
-                onchange: this.values[key],
-              }) : key === 'is_default' ? Checkbox.component({
-                state: this.values[key]() === 1 || false,
-                disabled: this.scope.resource_path() === '/api/user' && key === 'is_default',
-                onchange: (checked) => this.values[key](checked ? 1 : 0),
-              }) : <input className="FormControl" bidi={this.values[key]} disabled={this.scope.resource_path() === '/api/user' && key === 'resource_path'}/>}
+          <div className="OAuthCenter-Columns">
+            <div className="OAuthCenter-Column">
+              {this.renderFormGroups(this.fields.slice(0, 4))}
             </div>
-          )}
+            <div className="OAuthCenter-Column">
+              {this.renderFormGroups(this.fields.slice(4, 8))}
+            </div>
+          </div>
+
           <div className="Form-group">
             {Button.component({
               type: 'submit',
@@ -86,5 +74,30 @@ export default class EditScopeModal extends Modal {
       m.redraw();
       this.hide();
     });
+  }
+
+  renderFormGroups(fields) {
+    return fields.map(key =>
+      <div className={`Form-group${(key === 'method' || key === 'is_default') ? ' OAuthCenter-FormGroup-Column' : ''}`}>
+        <label>{app.translator.trans('foskym-oauth-center.admin.scopes.' + key)}</label>
+        {key === 'method' ? Select.component({
+          options: {
+            'GET': 'GET',
+            'POST': 'POST',
+            'PUT': 'PUT',
+            'DELETE': 'DELETE',
+            'PATCH': 'PATCH',
+          },
+          value: this.values[key](),
+          disabled: this.scope.resource_path() === '/api/user' && key === 'method',
+          onchange: this.values[key],
+        }) : key === 'is_default' ? Checkbox.component({
+          className: 'OAuthCenter-Checkbox',
+          state: this.values[key]() === 1 || false,
+          disabled: this.scope.resource_path() === '/api/user' && key === 'is_default',
+          onchange: (checked) => this.values[key](checked ? 1 : 0),
+        }) : <input className="FormControl" bidi={this.values[key]} disabled={this.scope.resource_path() === '/api/user' && key === 'resource_path'}/>}
+      </div>
+    )
   }
 }

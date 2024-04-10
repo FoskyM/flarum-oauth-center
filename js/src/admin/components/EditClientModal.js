@@ -13,6 +13,7 @@ export default class EditClientModal extends Modal {
       'redirect_uri',
       'grant_types',
       'scope',
+
       'client_name',
       'client_desc',
       'client_icon',
@@ -26,7 +27,7 @@ export default class EditClientModal extends Modal {
   }
 
   className() {
-    return 'EditClientModal Modal--small';
+    return 'EditClientModal Modal--large';
   }
 
   title() {
@@ -37,12 +38,25 @@ export default class EditClientModal extends Modal {
     return (
       <div className="Modal-body">
         <form onsubmit={this.onsubmit.bind(this)}>
-          {this.fields.map(key =>
-            <div className="Form-group">
-              <label>{app.translator.trans('foskym-oauth-center.admin.clients.' + key)}</label>
-              <input className="FormControl" bidi={this.values[key]} />
+          <div className="OAuthCenter-Columns">
+            <div className="OAuthCenter-Column">
+              {this.fields.slice(0, 5).map(key =>
+                <div className="Form-group">
+                  <label>{app.translator.trans('foskym-oauth-center.admin.clients.' + key)}</label>
+                  <input className="FormControl" bidi={this.values[key]} />
+                </div>
+              )}
             </div>
-          )}
+            <div className="OAuthCenter-Column">
+              {this.fields.slice(5, 9).map(key =>
+                <div className="Form-group">
+                  <label>{app.translator.trans('foskym-oauth-center.admin.clients.' + key)}</label>
+                  <input className="FormControl" bidi={this.values[key]} />
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="Form-group">
             {Button.component({
               type: 'submit',
