@@ -20,6 +20,10 @@ class CreateClientController extends AbstractCreateController
 
         $attributes = Arr::get($request->getParsedBody(), 'data.attributes');
 
+        if ($client = Client::where('client_id', Arr::get($attributes, 'client_id'))->first()) {
+            return $client;
+        }
+
         return Client::create([
             'client_id' => Arr::get($attributes, 'client_id'),
             'client_secret' => Arr::get($attributes, 'client_secret'),
