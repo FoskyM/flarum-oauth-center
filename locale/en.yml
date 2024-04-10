@@ -48,5 +48,6 @@ foskym-oauth-center:
       agree: Agree
       deny: Deny
     authorized:
+      no_records: No records
       no_more_records: No more records
       load_more: Load More
