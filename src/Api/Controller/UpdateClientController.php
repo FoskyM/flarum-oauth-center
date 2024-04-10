@@ -26,7 +26,10 @@ class UpdateClientController extends AbstractListController
         collect(['client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'client_name', 'client_desc', 'client_icon', 'client_home'])
             ->each(function (string $attribute) use ($client, $attributes) {
                 if (($val = Arr::get($attributes, $attribute)) !== null) {
-                    $client->$attribute = $val;
+                    if (($attribute == 'grant_types' || $attribute == 'scope') && $val === '')
+                        $client->$attribute = null;
+                    else
+                        $client->$attribute = $val;
                 }
             });
 
