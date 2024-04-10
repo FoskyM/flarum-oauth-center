@@ -48,5 +48,6 @@ foskym-oauth-center:
       agree: 授权
       deny: 拒绝
     authorized:
+      no_records: 暂无记录
       no_more_records: 没有更多记录了
       load_more: 加载更多

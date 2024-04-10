@@ -1,6 +1,7 @@
 import app from 'flarum/forum/app';
 import UserPage from 'flarum/forum/components/UserPage';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import Placeholder from 'flarum/common/components/Placeholder';
 import Button from 'flarum/common/components/Button';
 
 export default class AuthorizedPage extends UserPage {
@@ -28,7 +29,7 @@ export default class AuthorizedPage extends UserPage {
   }
   content() {
     if (this.records.length === 0) {
-      return <div>{app.translator.trans('foskym-oauth-center.forum.authorized.no_records')}</div>;
+      return <Placeholder text={app.translator.trans('foskym-oauth-center.forum.authorized.no_records')}/>;
     }
 
     return (
@@ -62,9 +63,7 @@ export default class AuthorizedPage extends UserPage {
         )}
 
         {this.nomore && (
-          <div style="text-align:center;padding:20px">
-            <span>{app.translator.trans('foskym-oauth-center.forum.authorized.no_more_records')}</span>
-          </div>
+          <Placeholder text={app.translator.trans('foskym-oauth-center.forum.authorized.no_more_records')}/>
         )}
       </div>
     );
