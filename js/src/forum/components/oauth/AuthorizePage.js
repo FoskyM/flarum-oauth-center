@@ -42,12 +42,12 @@ export default class AuthorizePage extends IndexPage {
       app.store.find('oauth-clients', params.client_id),
       app.store.find('oauth-scopes')
     ]).then(([client, scopes]) => {
-      if (client.length === 0) {
+      if (!client) {
         m.route.set('/');
         return;
       }
 
-      this.client = client[0];
+      this.client = client;
       this.scopes = scopes;
 
       let uris = this.client.redirect_uri().split(' ');
