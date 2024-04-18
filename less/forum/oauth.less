@@ -167,15 +167,21 @@ i.oauth-scope-object {
   flex-wrap: wrap;
   justify-content: center;
   padding-bottom: 20px;
+  position: relative;
+  .oauth-username {
+    display: grid;
+    padding-left: 10px;
+    padding-top: 2px;
+    text-align: left;
+  }
 }
 
-.oauth-username {
-  display: grid;
-  padding-left: 10px;
-  padding-top: 2px;
-  text-align: left;
-}
 
+@media (min-width: 768px) {
+  .oauth-user {
+    display: none;
+  }
+}
 
 @import "box.less";
 @import "card.less";

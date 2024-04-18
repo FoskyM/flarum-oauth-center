@@ -103,13 +103,13 @@ export default class AuthorizePage extends IndexPage {
               </div>
               <div class="oauth-body">
 
-                {/*<div class="oauth-user">*/}
-                {/*  {avatar(app.session.user, {className: 'oauth-avatar'})}*/}
-                {/*  <div class="oauth-username">*/}
-                {/*    <b>{app.session.user.username()}</b>*/}
-                {/*    <span>{app.session.user.displayName()}</span>*/}
-                {/*  </div>*/}
-                {/*</div>*/}
+                <div class="oauth-user">
+                  {avatar(app.session.user, {className: 'oauth-avatar'})}
+                  <div class="oauth-username">
+                    <b>{app.session.user.username()}</b>
+                    <span>{app.session.user.displayName()}</span>
+                  </div>
+                </div>
 
                 <div class="oauth-info">
                   <img src={app.forum.attribute('faviconUrl')} alt="favicon"/>
