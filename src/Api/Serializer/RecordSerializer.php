@@ -19,7 +19,7 @@ class RecordSerializer extends AbstractSerializer
         }
 
         // See https://docs.flarum.org/extend/api.html#serializers for more information.
-
+        $model->client->makeHidden(['client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'user_id']);
         return [
             "id" => $model->id,
             "client" => $model->client,
