@@ -33,6 +33,7 @@ foskym-oauth-center:
       scope_name: 名称
       scope_icon: 图标
       scope_desc: 描述
+      visible_fields: 可见字段
       add_button: 添加权限
       edit_scope: 编辑权限
 

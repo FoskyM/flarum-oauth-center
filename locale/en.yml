@@ -33,6 +33,7 @@ foskym-oauth-center:
       scope_name: Name
       scope_icon: Icon
       scope_desc: Description
+      visible_fields: Visible Fields
       add_button: Add Scope
       edit_scope: Edit Scope
 

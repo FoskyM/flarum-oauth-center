@@ -25,6 +25,7 @@ class ScopeSerializer extends AbstractSerializer
             "scope" => $model->scope,
             "resource_path" => $model->resource_path,
             "method" => $model->method,
+            "visible_fields" => $model->visible_fields,
             "is_default" => $model->is_default,
             "scope_name" => $model->scope_name,
             "scope_icon" => $model->scope_icon,
