@@ -17,7 +17,9 @@ export default class EditScopeModal extends Modal {
       'is_default',
       'scope_name',
       'scope_icon',
-      'scope_desc'
+      'scope_desc',
+
+      'visible_fields',
     ];
 
     this.values = this.fields.reduce((values, key) => {
@@ -43,8 +45,15 @@ export default class EditScopeModal extends Modal {
               {this.renderFormGroups(this.fields.slice(0, 4))}
             </div>
             <div className="OAuthCenter-Column">
-              {this.renderFormGroups(this.fields.slice(4, 8))}
+              {this.renderFormGroups(this.fields.slice(4, 7))}
             </div>
+          </div>
+
+          <div className="Form-group">
+            <label>{app.translator.trans('foskym-oauth-center.admin.scopes.visible_fields')}</label>
+            <textarea className="FormControl" bidi={this.values['visible_fields']} rows={3} placeholder={"id,username,email,data.attributes"}>
+              {this.values.visible_fields()}
+            </textarea>
           </div>
 
           <div className="Form-group">

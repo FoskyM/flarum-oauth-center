@@ -14,7 +14,9 @@ namespace FoskyM\OAuthCenter;
 use Flarum\Extend;
 use Flarum\Http\Middleware\AuthenticateWithHeader;
 use Flarum\Http\Middleware\CheckCsrfToken;
-use FoskyM\OAuthCenter\Middlewares\ResourceScopeMiddleware;
+use Flarum\Http\Middleware\ParseJsonBody;
+use FoskyM\OAuthCenter\Middlewares\ResourceScopeAuthMiddleware;
+use FoskyM\OAuthCenter\Middlewares\ResourceScopeFieldsMiddleware;
 use FoskyM\OAuthCenter\Middlewares\UnsetCsrfMiddleware;
 use FoskyM\OAuthCenter\Middlewares\UserCredentialsMiddleware;
 
@@ -58,7 +60,8 @@ return [
 		->serializeToForum('foskym-oauth-center.authorization_method_fetch', 'foskym-oauth-center.authorization_method_fetch', 'boolval'),
 
     (new Extend\Middleware('api'))
-        ->insertAfter(AuthenticateWithHeader::class, ResourceScopeMiddleware::class),
+        ->insertAfter(AuthenticateWithHeader::class, ResourceScopeAuthMiddleware::class)
+        ->add(ResourceScopeFieldsMiddleware::class),
     (new Extend\Middleware('forum'))
         ->insertBefore(CheckCsrfToken::class, UnsetCsrfMiddleware::class)
         ->insertAfter(CheckCsrfToken::class, UserCredentialsMiddleware::class),

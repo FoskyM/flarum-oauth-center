@@ -18,7 +18,7 @@ class Scope extends AbstractModel
     protected $guarded = [];
     static public function get_path_scope($path = '')
     {
-        return self::where('resource_path', 'like', $path . '%')->first();
+        return self::where('resource_path', 'like', $path . '%')->get();
         // return $this->where('resource_path', $path)->first();
     }
 }
