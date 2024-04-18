@@ -48,7 +48,7 @@ export default class ScopesPage extends Page {
                       icon: 'fas fa-edit',
                       onclick: () => this.showEditModal(scope),
                     }),
-                    scope.resource_path() !== '/api/user' && Button.component({
+                    Button.component({
                       className: 'Button Button--icon',
                       icon: 'fas fa-times',
                       onclick: () => {

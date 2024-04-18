@@ -98,14 +98,12 @@ export default class EditScopeModal extends Modal {
             'PATCH': 'PATCH',
           },
           value: this.values[key](),
-          disabled: this.scope.resource_path() === '/api/user' && key === 'method',
           onchange: this.values[key],
         }) : key === 'is_default' ? Checkbox.component({
           className: 'OAuthCenter-Checkbox',
           state: this.values[key]() === 1 || false,
-          disabled: this.scope.resource_path() === '/api/user' && key === 'is_default',
           onchange: (checked) => this.values[key](checked ? 1 : 0),
-        }) : <input className="FormControl" bidi={this.values[key]} disabled={this.scope.resource_path() === '/api/user' && key === 'resource_path'}/>}
+        }) : <input className="FormControl" bidi={this.values[key]}/>}
       </div>
     )
   }
