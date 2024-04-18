@@ -48,6 +48,9 @@ return [
         ->patch('/oauth-scopes/{id}', 'oauth.scopes.update', Api\Controller\UpdateScopeController::class)
         ->delete('/oauth-scopes/{id}', 'oauth.scopes.delete', Api\Controller\DeleteScopeController::class)
 
+        ->post('/oauth-tokens', 'oauth.tokens.create', Api\Controller\CreateTokenController::class)
+        ->delete('/oauth-tokens/expired', 'oauth.tokens.delete.expired', Api\Controller\DeleteExpiredTokenController::class)
+
 		->get('/oauth-records', 'oauth.records.list', Api\Controller\ListRecordController::class)
 
         ->get('/user', 'user.show', Controllers\ApiUserController::class),

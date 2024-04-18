@@ -4,13 +4,15 @@ import Button from 'flarum/common/components/Button';
 import IndexPage from "../pages/IndexPage";
 import ClientsPage from "../pages/ClientsPage";
 import ScopesPage from "../pages/ScopesPage";
+import TokensPage from "../pages/TokensPage";
 
 export default class SettingsPage extends ExtensionPage {
   translationPrefix = 'foskym-oauth-center.admin.page.';
   pages = {
     index: IndexPage,
     clients: ClientsPage,
-    scopes: ScopesPage
+    scopes: ScopesPage,
+    tokens: TokensPage
   };
 
   content() {
@@ -55,6 +57,8 @@ export default class SettingsPage extends ExtensionPage {
         return 'fas fa-network-wired';
       case 'scopes':
         return 'fas fa-user-lock';
+      case 'tokens':
+        return 'fas fa-key';
       default:
         return '';
     }
