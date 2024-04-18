@@ -1,7 +1,4 @@
 .oauth-column {
-  .oauth-header, .oauth-body {
-    padding: 20px;
-  }
 
   .oauth-header {
     display: none;
@@ -13,68 +10,19 @@
     justify-content: space-between;
     flex-wrap: wrap;
     border-radius: 0 0 12px 12px;
-  }
 
-  .oauth-user {
-    width: 100%;
-    text-align: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-bottom: 20px;
-  }
-
-  .oauth-username {
-    display: grid;
-    padding-left: 10px;
-    padding-top: 2px;
-    text-align: left;
-  }
-
-  .oauth-scope-area {
-    padding-top: 0;
+    background-color: @body-bg;
   }
 
   .oauth-info {
-    text-align: center;
-    padding-bottom: 20px;
-    position: relative;
-  }
-
-  .oauth-info img {
-    width: 64px;
-    border: #4950578c solid 1px;
-    box-shadow: 1px 0 0 0 #e8e8e8, 0 1px 0 0 #e8e8e8, 1px 1px 0 0 #e8e8e8, inset 1px 0 0 0 #e8e8e8, inset 0 1px 0 0 #e8e8e8;
-    transition: all .3s;
-  }
-
-  .oauth-info img:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
-  }
-
-  .oauth-info i, .oauth-info img:first-child {
-    display: none;
-  }
-
-  .oauth-info span {
-    display: block;
-  }
-
-  .oauth-scope-area {
-    width: 30%;
-  }
-
-  .oauth-info, .oauth-form {
-    width: 60%;
-  }
-
-  @media screen and (max-width: 768px) {
-    .oauth-scope-area {
+    i, img:first-child {
       display: none;
     }
-
-    .oauth-info, .oauth-form {
-      width: 100%;
+    img {
+      width: 128px;
+    }
+    span {
+      display: block;
     }
   }
 }
