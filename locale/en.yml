@@ -6,6 +6,7 @@ foskym-oauth-center:
       index: home
       clients: Manage Clients
       scopes: Manage Scopes
+      tokens: Manage Tokens
     settings:
       display_mode: Display Mode
       access_lifetime: Access Token Lifetime (seconds)
@@ -36,6 +37,9 @@ foskym-oauth-center:
       visible_fields: Visible Fields
       add_button: Add Scope
       edit_scope: Edit Scope
+    tokens:
+      add_token: Add Token
+      delete_token: Delete Token
 
   forum:
     page:
