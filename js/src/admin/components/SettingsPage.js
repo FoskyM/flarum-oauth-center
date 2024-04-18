@@ -14,6 +14,12 @@ export default class SettingsPage extends ExtensionPage {
     scopes: ScopesPage,
     tokens: TokensPage
   };
+  icons = {
+    index: 'home',
+    clients: 'network-wired',
+    scopes: 'user-lock',
+    tokens: 'key',
+  };
 
   content() {
     const page = m.route.param().page || 'index';
@@ -50,18 +56,7 @@ export default class SettingsPage extends ExtensionPage {
   }
 
   iconForPage(page) {
-    switch (page) {
-      case 'index':
-        return 'fas fa-home';
-      case 'clients':
-        return 'fas fa-network-wired';
-      case 'scopes':
-        return 'fas fa-user-lock';
-      case 'tokens':
-        return 'fas fa-key';
-      default:
-        return '';
-    }
+    return `fas fa-${this.icons[page]}` || '';
   }
 
   pageContent(page) {
