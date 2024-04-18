@@ -96,8 +96,9 @@ export default class AuthorizePage extends IndexPage {
               <div class="oauth-header">
                 <h2>{app.forum.attribute('title')}</h2>
                 <p>
-                  {app.translator.trans('foskym-oauth-center.forum.authorize.access')} <a
-                  href={this.client.client_home()} target="_blank">{this.client.client_name()}</a>
+                  {app.translator.trans('foskym-oauth-center.forum.authorize.access')} <Tooltip text={this.client.client_desc()} position="bottom">
+                    <a href={this.client.client_home()} target="_blank">{this.client.client_name()}</a>
+                  </Tooltip>
                 </p>
 
               </div>
@@ -112,7 +113,9 @@ export default class AuthorizePage extends IndexPage {
                 </div>
 
                 <div class="oauth-info">
-                  <img src={app.forum.attribute('faviconUrl')} alt="favicon"/>
+                  <Tooltip text={app.forum.attribute('title')}>
+                    <img src={app.forum.attribute('faviconUrl')} alt="favicon"/>
+                  </Tooltip>
                   <i class="fas fa-exchange-alt fa-2x"></i>
                   <Tooltip text={this.client.client_desc()}>
                     <img src={this.client.client_icon()} alt="client_icon"/>
@@ -126,19 +129,14 @@ export default class AuthorizePage extends IndexPage {
                       .filter(scope => scope)
                       .map(scope => {
                         let scope_info = this.scopes.find(s => s.scope() === scope);
-                        if (scope_info == null) {
-                          return '';
-                        }
-                        return <ScopeComponent scope={scope_info} client={this.client} />;
+                        return scope_info && <ScopeComponent scope={scope_info} client={this.client} />;
                       })
                   }
                 </div>
                 <form class="oauth-form" method="post" id="form" action="/oauth/authorize" onsubmit={this.onsubmit.bind(this)}>
-                  <input type="hidden" name="response_type" value={this.params.response_type}/>
-                  <input type="hidden" name="client_id" value={this.params.client_id}/>
-                  <input type="hidden" name="redirect_uri" value={this.params.redirect_uri}/>
-                  <input type="hidden" name="state" value={this.params.state}/>
-                  <input type="hidden" name="scope" value={this.params.scope}/>
+                  {Object.keys(this.params).map(key => (
+                    <input type="hidden" name={key} value={this.params[key]} />
+                  ))}
                   <input type="hidden" name="is_authorized" value={this.is_authorized}/>
                   <div class="oauth-form-item oauth-btn-group">
                     <Button className="Button" type="submit" style="width: 50%;" onclick={this.deny.bind(this)}
@@ -173,11 +171,7 @@ export default class AuthorizePage extends IndexPage {
         method: 'POST',
         url: '/oauth/authorize/fetch',
         body: {
-          response_type: this.params.response_type,
-          client_id: this.params.client_id,
-          redirect_uri: this.params.redirect_uri,
-          state: this.params.state,
-          scope: this.params.scope,
+          ...this.params,
           is_authorized: this.is_authorized,
         }
       }).then((params) => {
