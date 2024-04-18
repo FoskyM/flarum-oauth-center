@@ -2,7 +2,7 @@
 
 namespace FoskyM\OAuthCenter\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
+use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,7 +10,7 @@ use Tobscure\JsonApi\Document;
 use FoskyM\OAuthCenter\Models\Client;
 use FoskyM\OAuthCenter\Api\Serializer\ClientPublicSerializer;
 
-class ShowClientController extends AbstractListController
+class ShowClientController extends AbstractShowController
 {
     public $serializer = ClientPublicSerializer::class;
     protected function data(ServerRequestInterface $request, Document $document)
@@ -24,7 +24,7 @@ class ShowClientController extends AbstractListController
             return [];
         }
 
-        $client = Client::where('client_id', $client_id)->get();
+        $client = Client::where('client_id', $client_id)->get()->first();
 
         return $client;
 
