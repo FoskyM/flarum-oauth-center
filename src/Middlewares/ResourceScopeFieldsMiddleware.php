@@ -47,6 +47,12 @@ class ResourceScopeFieldsMiddleware implements MiddlewareInterface
             $visible_fields = array_merge($visible_fields, explode(',', $scope['visible_fields']));
         }
 
+        $visible_fields = array_unique(array_values(array_filter($visible_fields)));
+
+        if (empty($visible_fields)) {
+            return $response;
+        }
+
         foreach ($visible_fields as $visible_field) {
             if (Arr::has($origin, $visible_field)) {
                 Arr::set($data, $visible_field, Arr::get($origin, $visible_field));
