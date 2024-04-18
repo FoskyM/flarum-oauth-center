@@ -11,7 +11,7 @@ export default class ScopeComponent extends Component {
           {
             (scope.scope_icon().indexOf('fa-') > -1) ?
               <i class={"oauth-scope-object fa-2x " + scope.scope_icon()}
-                 style="margin-left:2px;color:#000"></i> :
+                 style="margin-left:2px;"></i> :
               <img class="oauth-scope-object" src={scope.scope_icon()} style="width:32px"/>
           }
         </div>
