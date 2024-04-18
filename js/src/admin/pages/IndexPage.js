@@ -55,6 +55,7 @@ export default class IndexPage extends Page {
             Select.component({
               options: {
                 'box': 'Box',
+                'card': 'Card',
                 'column': 'Column'
               },
               value: this.values['foskym-oauth-center.' + this.fields[0]],
