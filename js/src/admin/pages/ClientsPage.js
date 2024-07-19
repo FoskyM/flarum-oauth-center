@@ -53,13 +53,12 @@ export default class ClientsPage extends Page {
                 }, Button.component({
                   className: 'Button Button--block',
                   onclick: () => {
-                    const client = app.store.createRecord('oauth-clients');
                     const client_id = randomString(32);
                     const client_secret = randomString(32);
-                    client.save({
+                    app.store.createRecord('oauth-clients').save({
                       client_id: client_id,
                       client_secret: client_secret,
-                    }).then(() => {
+                    }).then(client => {
                       this.clients.push(client);
                       this.showEditModal(client);
                     });

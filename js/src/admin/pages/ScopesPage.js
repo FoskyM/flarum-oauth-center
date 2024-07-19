@@ -63,15 +63,16 @@ export default class ScopesPage extends Page {
                 }, Button.component({
                   className: 'Button Button--block',
                   onclick: () => {
-                    const scope = app.store.createRecord('oauth-scopes');
-                    scope.save({
-                      'scope': 'Scope.' + randomString(8),
-                      'resource_path': '/api/' + randomString(4),
-                      'method': 'GET',
-                    }).then(() => {
-                      this.scopes.push(scope);
-                      this.showEditModal(scope);
-                    });
+                    app.store.createRecord('oauth-scopes')
+                      .save({
+                        'scope': 'Scope.' + randomString(8),
+                        'resource_path': '/api/' + randomString(4),
+                        'method': 'GET',
+                      })
+                      .then(scope => {
+                        this.scopes.push(scope);
+                        this.showEditModal(scope);
+                      });
                   },
                 }, app.translator.trans(this.translationPrefix + 'add_button')))),
               ]),
@@ -81,7 +82,8 @@ export default class ScopesPage extends Page {
       </div>
     );
   }
+
   showEditModal(scope) {
-    app.modal.show(EditScopeModal, { scope: scope });
+    app.modal.show(EditScopeModal, {scope: scope});
   }
 }
