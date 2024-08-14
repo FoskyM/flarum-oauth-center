@@ -12,6 +12,12 @@
     .AuthorizedRecord-left {
       display: inline-flex;
 
+      h3 {
+        line-height: 1;
+        margin-block-start: 0;
+        margin-block-end: 0.5em;
+      }
+
       .AuthorizedRecord-icon {
         display: inline-block;
         width: 40px;
@@ -26,17 +32,16 @@
         }
       }
     }
+
+    .AuthorizedRecord-right {
+      display: grid;
+
+      time {
+        font-size: 0.8em;
+        color: #666;
+        float: right;
+      }
+
+    }
   }
-}
-
-.AuthorizedRecord h3 {
-  line-height: 1;
-  margin-block-start: 0;
-  margin-block-end: 0.5em;
-}
-
-.AuthorizedRecord time {
-    font-size: 0.8em;
-    color: #666;
-    float: right;
 }

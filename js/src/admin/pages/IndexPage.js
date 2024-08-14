@@ -17,6 +17,7 @@ export default class IndexPage extends Page {
       'display_mode',
       'access_lifetime',
 
+      'allow_delete_records',
       'allow_implicit',
       'enforce_state',
       'require_exact_redirect_uri',
@@ -25,7 +26,7 @@ export default class IndexPage extends Page {
     const settings = app.data.settings;
     this.values = this.fields.reduce((values, key) => {
       key = 'foskym-oauth-center.' + key;
-      values[key] = Stream(settings[key] || "");
+      values[key] = Stream(settings[key] || '');
       return values;
     }, {});
 
@@ -40,47 +41,75 @@ export default class IndexPage extends Page {
     return (
       <div>
         <form onsubmit={this.onsubmit.bind(this)} className="BasicsPage">
-          {this.fields.slice(2).map(field =>
+          {this.fields.slice(2).map((field) =>
             FieldSet.component({}, [
               <div style="height: 5px;"></div>,
-              Switch.component({
-                state: this.values['foskym-oauth-center.' + field],
-                onchange: (value) => this.saveSingleSetting(field, value),
-                loading: this.saving,
-              }, app.translator.trans(`foskym-oauth-center.admin.settings.${field}`))
+              Switch.component(
+                {
+                  state: this.values['foskym-oauth-center.' + field],
+                  onchange: (value) => this.saveSingleSetting(field, value),
+                  loading: this.saving,
+                },
+                app.translator.trans(`foskym-oauth-center.admin.settings.${field}`)
+              ),
             ])
           )}
-          <hr/>
+          <hr />
           {FieldSet.component({}, [
             Select.component({
               options: {
-                'box': 'Box',
-                'card': 'Card',
-                'column': 'Column'
+                box: 'Box',
+                card: 'Card',
+                column: 'Column',
               },
               value: this.values['foskym-oauth-center.' + this.fields[0]],
               onchange: (value) => this.saveSingleSetting(this.fields[0], value),
               loading: this.saving,
             }),
-            <div className="helpText">
-              {app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)}
-            </div>,
+            <div className="helpText">{app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[0]}`)}</div>,
           ])}
-          <hr/>
+          <hr />
           {FieldSet.component({}, [
-            <input className="FormControl" bidi={this.values['foskym-oauth-center.' + this.fields[1]]}
-                   placeholder={app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[1]}`)}
-                   required/>,
-            <div className="helpText">
-              {app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[1]}`)}
-            </div>,
-            Button.component({
-              type: 'submit',
-              className: 'Button Button--primary',
-              loading: this.saving
-            }, app.translator.trans('core.admin.settings.submit_button'))
+            <input
+              className="FormControl"
+              bidi={this.values['foskym-oauth-center.' + this.fields[1]]}
+              placeholder={app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[1]}`)}
+              required
+            />,
+            <div className="helpText">{app.translator.trans(`foskym-oauth-center.admin.settings.${this.fields[1]}`)}</div>,
+            Button.component(
+              {
+                type: 'submit',
+                className: 'Button Button--primary',
+                loading: this.saving,
+              },
+              app.translator.trans('core.admin.settings.submit_button')
+            ),
           ])}
         </form>
+        <hr />
+        <div>
+          <Button
+            className={'Button Button--danger'}
+            onclick={() => {
+              window.confirm(app.translator.trans('foskym-oauth-center.admin.action.delete_all_records_confirm')) &&
+                app
+                  .request({
+                    method: 'DELETE',
+                    url: app.forum.attribute('apiUrl') + '/oauth-records/all',
+                  })
+                  .then(() => {
+                    app.alerts.show({ type: 'success' }, app.translator.trans('foskym-oauth-center.admin.action.delete_all_records_success'));
+                  })
+                  .catch((error) => {
+                    m.redraw();
+                    throw error;
+                  });
+            }}
+          >
+            {app.translator.trans('foskym-oauth-center.admin.action.delete_all_records_button')}
+          </Button>
+        </div>
       </div>
     );
   }
@@ -92,10 +121,9 @@ export default class IndexPage extends Page {
 
     this.values['foskym-oauth-center.' + setting] = value;
 
-    saveSettings({['foskym-oauth-center.' + setting]: value})
-      .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
-      .catch(() => {
-      })
+    saveSettings({ ['foskym-oauth-center.' + setting]: value })
+      .then(() => app.alerts.show({ type: 'success' }, app.translator.trans('core.admin.settings.saved_message')))
+      .catch(() => {})
       .finally(() => {
         this.saving = false;
         m.redraw();
@@ -113,14 +141,13 @@ export default class IndexPage extends Page {
 
     settings['foskym-oauth-center.access_lifetime'] = this.values['foskym-oauth-center.access_lifetime']();
 
-    if (settings['foskym-oauth-center.access_lifetime'] === "") {
+    if (settings['foskym-oauth-center.access_lifetime'] === '') {
       settings['foskym-oauth-center.access_lifetime'] = 3600;
     }
 
     saveSettings(settings)
-      .then(() => app.alerts.show({type: 'success'}, app.translator.trans('core.admin.settings.saved_message')))
-      .catch(() => {
-      })
+      .then(() => app.alerts.show({ type: 'success' }, app.translator.trans('core.admin.settings.saved_message')))
+      .catch(() => {})
       .finally(() => {
         this.saving = false;
         m.redraw();

@@ -32,8 +32,32 @@ export default class AuthorizedPage extends UserPage {
       return <Placeholder text={app.translator.trans('foskym-oauth-center.forum.authorized.no_records')} />;
     }
 
+    let allow_delete = app.forum.attribute('foskym-oauth-center.allow_delete_records');
+    console.log(allow_delete);
+
     return (
       <div className="AuthorizedPage">
+        {allow_delete && (
+          <Button
+            className={'Button Button--danger'}
+            onclick={() => {
+              window.confirm(app.translator.trans('foskym-oauth-center.forum.authorized.delete_all_confirm')) &&
+                app
+                  .request({
+                    url: app.forum.attribute('apiUrl') + '/oauth-records/user',
+                    method: 'DELETE',
+                  })
+                  .then(() => {
+                    this.records = [];
+                    this.nomore = false;
+                    this.loadMore();
+                  });
+            }}
+          >
+            {app.translator.trans('foskym-oauth-center.forum.authorized.delete_all_button')}
+          </Button>
+        )}
+
         <ul className="AuthorizedRecords">
           {this.records.map((record) => (
             <li className="AuthorizedRecord">
@@ -42,13 +66,29 @@ export default class AuthorizedPage extends UserPage {
                   <img className="AuthorizedRecord-icon" src={record.attribute('client').client_icon} alt="client_icon" />
                   <div className="AuthorizedRecord-info">
                     <h3>
-                      <a href={record.attribute('client').client_home} target="_blank">{record.attribute('client').client_name}</a>
+                      <a href={record.attribute('client').client_home} target="_blank">
+                        {record.attribute('client').client_name}
+                      </a>
                     </h3>
                     <p>{record.attribute('client').client_desc}</p>
                   </div>
                 </div>
                 <div className="AuthorizedRecord-right">
                   <time>{record.authorized_at().toLocaleString()}</time>
+
+                  {allow_delete && (
+                    <Button
+                      className={'Button Button--danger Button--small'}
+                      onclick={() => {
+                        record.delete().then(() => {
+                          this.records = this.records.filter((r) => r !== record);
+                          m.redraw();
+                        });
+                      }}
+                    >
+                      {app.translator.trans('foskym-oauth-center.forum.authorized.delete_button')}
+                    </Button>
+                  )}
                 </div>
               </div>
               <hr />
