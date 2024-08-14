@@ -14,6 +14,7 @@ foskym-oauth-center:
       enforce_state: 强制状态验证（state 参数）
       require_exact_redirect_uri: 需要精确的重定向 URI
       authorization_method_fetch: 授权使用 Fetch 方式请求（非直接转向页面）
+      allow_delete_records: 允许删除授权记录
     clients:
       client_id: 应用 ID
       client_secret: 应用密钥
@@ -40,6 +41,10 @@ foskym-oauth-center:
     tokens:
       add_token: 添加令牌
       delete_token: 删除过期令牌
+    action:
+      delete_all_records_button: 删除所有记录
+      delete_all_records_confirm: 确认删除所有记录
+      delete_all_records_success: 删除所有记录成功
 
   forum:
     page:
@@ -56,3 +61,6 @@ foskym-oauth-center:
       no_records: 暂无记录
       no_more_records: 没有更多记录了
       load_more: 加载更多
+      delete_button: 删除此记录
+      delete_all_button: 删除所有记录
+      delete_all_confirm: 确认删除所有记录

@@ -52,6 +52,9 @@ return [
         ->delete('/oauth-tokens/expired', 'oauth.tokens.delete.expired', Api\Controller\DeleteExpiredTokenController::class)
 
 		->get('/oauth-records', 'oauth.records.list', Api\Controller\ListRecordController::class)
+        ->delete('/oauth-records/all', 'oauth.records.delete.all', Api\Controller\DeleteAllRecordController::class)
+        ->delete('/oauth-records/user', 'oauth.records.delete.user', Api\Controller\DeleteUserRecordController::class)
+        ->delete('/oauth-records/{id}', 'oauth.records.delete', Api\Controller\DeleteRecordController::class)
 
         ->get('/user', 'user.show', Controllers\ApiUserController::class),
 
@@ -60,7 +63,8 @@ return [
         ->serializeToForum('foskym-oauth-center.allow_implicit', 'foskym-oauth-center.allow_implicit', 'boolval')
         ->serializeToForum('foskym-oauth-center.enforce_state', 'foskym-oauth-center.enforce_state', 'boolval')
         ->serializeToForum('foskym-oauth-center.require_exact_redirect_uri', 'foskym-oauth-center.require_exact_redirect_uri', 'boolval')
-		->serializeToForum('foskym-oauth-center.authorization_method_fetch', 'foskym-oauth-center.authorization_method_fetch', 'boolval'),
+		->serializeToForum('foskym-oauth-center.authorization_method_fetch', 'foskym-oauth-center.authorization_method_fetch', 'boolval')
+        ->serializeToForum('foskym-oauth-center.allow_delete_records', 'foskym-oauth-center.allow_delete_records', 'boolval'),
 
     (new Extend\Middleware('api'))
         ->insertAfter(AuthenticateWithHeader::class, ResourceScopeAuthMiddleware::class)

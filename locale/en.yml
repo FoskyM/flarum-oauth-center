@@ -14,6 +14,7 @@ foskym-oauth-center:
       enforce_state: Enforce State Validation (state parameter)
       require_exact_redirect_uri: Require Exact Redirect URI
       authorization_method_fetch: Authorization Method Fetch (Not directly redirecting to)
+      allow_delete_records: Allow Delete Authorization Records
     clients:
       client_id: Client ID
       client_secret: Client Secret
@@ -40,6 +41,10 @@ foskym-oauth-center:
     tokens:
       add_token: Add Token
       delete_token: Delete Token
+    action:
+      delete_all_records_button: Delete all records
+      delete_all_records_confirm: Confirm delete all records
+      delete_all_records_success: Delete all records successfully
 
   forum:
     page:
@@ -56,3 +61,6 @@ foskym-oauth-center:
       no_records: No records
       no_more_records: No more records
       load_more: Load More
+      delete_button: Delete this log
+      delete_all_button: Delete all logs
+      delete_all_confirm: Confirm delete all logs
